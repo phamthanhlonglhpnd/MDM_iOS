@@ -1,6 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import Constant from '../../controller/Constant'
+import dayjs from 'dayjs'
 
 
 const NotificationItem = ({ item }) => {
@@ -8,7 +9,7 @@ const NotificationItem = ({ item }) => {
     return (
         <View style={styles.contentView}>
             <Text style={styles.text}>
-                {`Thời gian: ${new Date(item?.created_at).toLocaleDateString()}`}
+                {`Thời gian: ${dayjs(item?.created_at).format('DD/MM/YYYY')}`}
             </Text>
             <Text style={styles.text}>
                 {`Nội dung: ${item.data?.content}`}

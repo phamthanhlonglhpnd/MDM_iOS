@@ -15,14 +15,17 @@
     "@react-navigation/bottom-tabs": "6.0.9",
     "@react-navigation/native": "6.0.6",
     "@react-navigation/native-stack": "6.2.5",
+    "@reduxjs/toolkit": "^1.8.2",
     "axios": "^0.27.2",
     "date-fns": "2.27.0",
+    "dayjs": "^1.11.2",
     "progress-hud": "1.2.0",
     "react": "17.0.2",
     "react-native": "0.68.2",
     "react-native-actions-sheet": "0.5.4",
     "react-native-actionsheet": "2.4.2",
     "react-native-camera": "4.2.1",
+    "react-native-camera-kit": "^12.1.0",
     "react-native-fast-image": "8.5.11",
     "react-native-gesture-handler": "1.10.3",
     "react-native-keyboard-aware-scroll-view": "0.9.5",
@@ -32,7 +35,9 @@
     "react-native-qrcode-scanner": "1.5.4",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "3.10.1",
-    "react-native-vector-icons": "^9.1.0"
+    "react-native-vector-icons": "^9.1.0",
+    "react-redux": "^8.0.2",
+    "redux-persist": "^6.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

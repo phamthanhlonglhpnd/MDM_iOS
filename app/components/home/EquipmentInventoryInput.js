@@ -4,7 +4,7 @@ import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { ScrollView, TextInput } from 'react-native-gesture-handler'
 import APIManager from '../../controller/APIManager'
 import Constant from '../../controller/Constant'
-import PushNotification from "react-native-push-notification";
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import Loading from '../customs/Loading'
 
 const EquipmentInventoryInput = () => {
@@ -18,30 +18,18 @@ const EquipmentInventoryInput = () => {
     const [isLoading, setIsLoading] = useState(false)
     const navigation = useNavigation()
 
-    useEffect(() => {
-        createChannels();
-    }, [])
-
-    const createChannels = () => {
-        PushNotification.createChannel({
-            channelId: 'test-channel',
-            channelName: 'Test Channel'
-        })
-    }
-
-    const handleNotification = (title, message) => {
-        PushNotification.localNotification({
-            channelId: 'test-channel',
+    const showNotification = (id, title, body) => {
+        PushNotificationIOS.addNotificationRequest({
+            id: id,
             title: title,
-            message: message,
-            autoCancel: true,
-            actions: ['Ok', 'Cancel']
+            body: body
         })
     }
 
     const onSuccessed = () => {
         setIsLoading(false);
-        handleNotification(
+        showNotification(
+            'success',
             'Gửi ghi chú kiểm kê thiết bị thành công!',
             'Vui lòng xem chi tiết ở mục lịch sử kiểm kê của thiết bị!'
         )
@@ -50,7 +38,8 @@ const EquipmentInventoryInput = () => {
     }
 
     const onFailed = () => {
-        handleNotification(
+        showNotification(
+            'fail',
             'Gửi yêu cầu kiểm kê thiết bị thất bại!',
             'Vui lòng kiểm tra lại!'
         )
@@ -65,13 +54,17 @@ const EquipmentInventoryInput = () => {
         }
         setIsLoading(true)
         APIManager.requestInventory(equipmentId, note)
-            .then(response => {
-                onSuccessed();
-                
-            })
-            .catch(onFailed)
-            .catch(() => setIsLoading(false))
+            .then(response => onSuccessed())
+            .catch(e => onFailed())
+            .finally(() => setIsLoading(false))
     }
+
+    useEffect(() => {
+        return () => {
+            setIsLoading(false)
+        }
+    }, [])
+
 
     return (
         isLoading ? <Loading /> :

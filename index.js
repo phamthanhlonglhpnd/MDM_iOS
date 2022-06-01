@@ -2,11 +2,10 @@
  * @format
  */
 
-import {AppRegistry} from 'react-native';
-import RootNavigation from './app/components/navigation/RootNavigation';
+import {AppRegistry, Platform} from 'react-native';
+import App from './App';
 import {name as appName} from './app.json';
 import PushNotification from "react-native-push-notification";
-import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import {LogBox} from "react-native";
 
 LogBox.ignoreLogs([
@@ -21,16 +20,16 @@ LogBox.ignoreLogs([
  PushNotification.configure({
      onNotification: function (notification) {
         //  console.log("NOTIFICATION:", notification);
-        notification.finish(PushNotificationIOS.FetchResult.NoData);
+        // notification.finish(PushNotificationIOS.FetchResult.NoData);
        },
        permissions: {
         alert: true,
         badge: true,
         sound: true,
       },
-    
+      popInitialNotification: true,
      requestPermissions: Platform.OS === 'ios'
  })
 
 
-AppRegistry.registerComponent(appName, () => RootNavigation);
+AppRegistry.registerComponent(appName, () => App);

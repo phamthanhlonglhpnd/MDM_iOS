@@ -84,8 +84,8 @@ const EquipmentDetails = () => {
 
     const getStatusStyle = (status) => {
         let statusStyle = {
-            backgroundColor: '',
-            statusColor:  ''
+            backgroundColor: 'black',
+            statusColor:  'white'
         }
         
         if(status === 'not_handed' || status === 'active') {

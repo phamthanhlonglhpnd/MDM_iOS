@@ -10,9 +10,8 @@ import CategoryItem from './components/CategoryItem'
 const Home = () => {
 
     const navigation = useNavigation();
-
     const userInfo = AppManager.shared.currentUser;
-
+    
     useLayoutEffect(() => {
         navigation.setOptions({
             headerShown: false

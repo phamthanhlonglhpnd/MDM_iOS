@@ -42,8 +42,8 @@ export default {
     },
     nameScreen: {
         TabBar: 'TabBar',
-        Home: 'Home',
-        Profile: 'Profile',
+        Home: 'Trang chủ',
+        Profile: 'Cá nhân',
         Settings: 'Settings',
         Message: 'Message',
         Login: 'Login',
