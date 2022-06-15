@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/core'
 import React, { useLayoutEffect, useState, useCallback } from 'react'
 import { useFocusEffect } from '@react-navigation/native'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, Alert } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import APIManager from '../../controller/APIManager'
 import StaffItem from './components/StaffItem'
@@ -18,7 +18,7 @@ const StaffList = () => {
         APIManager.getAllUser()
             .then(staffs => setStaffs(staffs))
             .catch(error => {
-                alert(error?.message)
+                Alert.alert('Thông báo', error?.message)
                 setIsLoading(false)
             })
             .finally(() => setIsLoading(false))

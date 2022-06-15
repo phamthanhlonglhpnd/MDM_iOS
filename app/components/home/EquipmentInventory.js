@@ -37,7 +37,7 @@ const EquipmentInventory = () => {
                 setKeyword("");
             })
             .catch(error => {
-                alert(error?.message);
+                Alert.alert('Thông báo', error?.message);
                 setKeyword("")
                 setIsLoading(false)
             })
@@ -69,7 +69,7 @@ const EquipmentInventory = () => {
     return (
         isLoading ? <Loading /> :
         equipments.length === 0 ? 
-        <View style={{ flex: 1 }}>
+        <View style={styles.container}>
             <Text style={styles.title}>
                 Nhập để tìm thiết bị cần kiểm kê
             </Text>
@@ -133,6 +133,12 @@ const EquipmentInventory = () => {
 export default EquipmentInventory
 
 const styles = StyleSheet.create({
+    container: {
+        paddingHorizontal: 15,
+        backgroundColor: '#EBF3FE',
+        flex: 1,
+        paddingVertical: 20
+    },
     title: {
         alignSelf: 'center',
         marginTop: 20,

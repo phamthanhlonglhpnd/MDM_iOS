@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/core';
 import React, {useState, useEffect} from 'react'
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import FormInput from '../../components/customs/FormInput';
@@ -31,7 +31,7 @@ export default function Login() {
         APIManager.login(email, password)
             .then(showHomeScreen)
             .catch(error => {
-              alert(error?.message)
+              Alert.alert('Thông báo', error?.message)
               setIsLoading(false)
             })
     }

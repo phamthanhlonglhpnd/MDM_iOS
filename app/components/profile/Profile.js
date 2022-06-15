@@ -1,18 +1,30 @@
 import { useNavigation, StackActions } from '@react-navigation/core'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import AppManager from '../../controller/AppManager'
 import Constant from '../../controller/Constant'
 import StorageManager from '../../controller/StorageManager'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import APIManager from '../../controller/APIManager'
+import Loading from '../customs/Loading'
 
 const Profile = () => {
-
+    const [department, setDepartment]=  useState('');
+    const [isLoading, setIsLoading] = useState(true);
     const navigation = useNavigation();
-
     const userInfo = AppManager.shared.currentUser;
 
+    useEffect(() => {
+        APIManager.getAllDepartments()
+            .then(department => setDepartment(department[0].title))
+            .catch(error => {
+                Alert.alert('Thông báo', error?.message)
+                setIsLoading(false);
+            })
+            .finally(() => setIsLoading(false))
+    }, [])
+    
     const logOut = async () => {
         AppManager.shared.currentUser = null
         await StorageManager.setData(Constant.keys.currentUser, null)
@@ -22,32 +34,18 @@ const Profile = () => {
     }
 
     return (
+        isLoading ? <Loading /> :
         <SafeAreaView 
             style={styles.container}
         >
         <View style={styles.top}>
-            <TouchableOpacity
-                style={styles.button}
-                onPress={() => navigation.goBack()}
-            >
-                <View style={styles.icon}>
-                    <FontAwesome5 name='arrow-left' size={20} color='black'/>
-                </View>
-            </TouchableOpacity>
             <Text style={{
                 fontSize: 16,
                 fontWeight: 'bold',
-                color: 'black'
+                color: 'black',
+                textAlign: 'center'
             }}>
                 Thông tin cá nhân
-            </Text>
-            <Text
-                style={{
-                    color: '#FF6C44',
-                    fontSize: 16
-                }}
-            >
-                Sửa
             </Text>
         </View>
         <Image
@@ -84,10 +82,10 @@ const Profile = () => {
                         fontSize: 14,
                         color: 'gray'
                     }}>
-                    DepartmentID
+                    Khoa/Phòng
                 </Text>
                 <Text style={styles.infor}>
-                    {userInfo?.department_id}
+                    {department}
                 </Text>
             </View>
         </View>
@@ -160,9 +158,9 @@ const styles = StyleSheet.create({
         paddingVertical: 20,
     },
     top: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
+        // flexDirection: 'row',
+        // alignItems: 'center',
+        // justifyContent: 'space-between'
     },
     middle: {
         backgroundColor: "#DDDDDD",

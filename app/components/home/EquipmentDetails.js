@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View, Image, FlatList } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, Image, FlatList, Alert } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import APIManager from '../../controller/APIManager'
 import Constant from '../../controller/Constant'
@@ -42,7 +42,7 @@ const EquipmentDetails = () => {
                 }
             })
             .catch(error => {
-                alert(error?.message)
+                // Alert.alert('Thông báo', error?.message)
                 setIsLoading(false)
             })
             .finally(() => setIsLoading(false))
@@ -57,7 +57,7 @@ const EquipmentDetails = () => {
                 setHistoryInventory(historyInventory);
             })
             .catch(error => {
-                alert(error?.message)
+                Alert.alert('Thông báo', error?.message)
                 setIsLoading(false)
             })
             .finally(() => setIsLoading(false))

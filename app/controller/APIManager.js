@@ -113,6 +113,7 @@ export default class APIManager {
             }
             let response = await axios.get(APIManager.endpoints.getAllDepartments, { headers })
             const departments = Object(response.data?.data ?? [])
+            
             return Promise.resolve(departments)
         } catch (error) {
             return Promise.reject(error)

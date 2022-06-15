@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { useFocusEffect } from '@react-navigation/native'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, Alert } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import NotificationItem from './NotificationItem'
 import APIManager from '../../controller/APIManager'
@@ -20,7 +20,7 @@ const NotificationList = ({ navigation }) => {
                 setNotificationList(notification)
             })
             .catch(error => {
-                alert(error?.message)
+                Alert.alert('Thông báo', error?.message)
                 setIsLoading(false)
             })
             .finally(() => setIsLoading(false))

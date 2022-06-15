@@ -1,6 +1,6 @@
 import { useNavigation, useRoute, StackActions } from '@react-navigation/core'
 import React, { useLayoutEffect, useRef, useState, useEffect } from 'react'
-import { FlatList, StyleSheet, TouchableOpacity, View, Image } from 'react-native'
+import { FlatList, StyleSheet, TouchableOpacity, View, Image, Alert } from 'react-native'
 import APIManager from '../../controller/APIManager'
 import EquipmentItem from './components/EquipmentItem'
 import ActionSheet from 'react-native-actionsheet'
@@ -62,7 +62,7 @@ const EquipmentList = () => {
                 equipmentsRoot.current = equipments
             })
             .catch(error => {
-                alert(error?.message)
+                Alert.alert('Thông báo', error?.message)
                 setIsLoading(false)
             })
             .finally(() => setIsLoading(false))

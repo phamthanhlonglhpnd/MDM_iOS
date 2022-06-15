@@ -38,7 +38,7 @@ const ErrorRequest = () => {
                 setKeyword("");
             })
             .catch(error => {
-                alert(error?.message);
+                Alert.alert('Thông báo', error?.message);
                 setKeyword("")
                 setIsLoading(false)
             })
@@ -70,7 +70,7 @@ const ErrorRequest = () => {
     return (
         isLoading ? <Loading /> :
         equipments.length === 0 ? 
-        <View style={{ flex: 1 }}>
+        <View style={styles.container}>
             <Text style={styles.title}>
                 Nhập để tìm thiết bị cần báo hỏng
             </Text>
@@ -134,6 +134,12 @@ const ErrorRequest = () => {
 export default ErrorRequest
 
 const styles = StyleSheet.create({
+    container: {
+        paddingHorizontal: 15,
+        backgroundColor: '#EBF3FE',
+        flex: 1,
+        paddingVertical: 20
+    },
     title: {
         alignSelf: 'center',
         marginTop: 20,

@@ -1,7 +1,7 @@
 import { useNavigation, useRoute, StackActions } from '@react-navigation/core'
 import React, { useState, useCallback } from 'react'
 import { useFocusEffect } from '@react-navigation/native'
-import { FlatList, StyleSheet, Text, View } from 'react-native'
+import { FlatList, StyleSheet, Text, View, Alert } from 'react-native'
 import APIManager from '../../controller/APIManager'
 import EquipmentItem from './components/EquipmentItem'
 import Constant from '../../controller/Constant'
@@ -19,7 +19,7 @@ const DepartmentList = () => {
         APIManager.getAllEquipmentsByDepartment(route.params.id)
             .then(equipments => setEquipments(equipments))
             .catch(error => {
-                alert(error?.message)
+                Alert.alert('Thông báo', error?.message)
                 setIsLoading(false)
             })
             .finally(() => setIsLoading(false))

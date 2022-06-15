@@ -78,6 +78,7 @@ export default {
         isOpened: 'isOpened',
         currentUser: 'currentUser',
         count: 'count',
+        department: 'department'
     },
     homeData: [
         {
@@ -180,6 +181,12 @@ export default {
             key: 'liquidated',
             value: 'Đã thanh lý'
         }
-    ]
+    ],
+    containerScreenStyle: {
+        paddingHorizontal: 15,
+        backgroundColor: '#EBF3FE',
+        flex: 1,
+        paddingVertical: 20
+    }
 }
 

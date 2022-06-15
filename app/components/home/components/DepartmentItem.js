@@ -124,8 +124,9 @@ const styles = StyleSheet.create({
         color: Constant.color.text
     },
     name: {
-        fontSize: 18,
-        color: 'black'
+        fontSize: 17,
+        color: 'black',
+        fontWeight:'bold'
     },
     email: {
         backgroundColor: '#EC8C3D',
