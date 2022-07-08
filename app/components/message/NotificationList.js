@@ -7,6 +7,9 @@ import APIManager from '../../controller/APIManager'
 import Loading from '../customs/Loading'
 import { useDispatch } from 'react-redux'
 import { resetCount } from '../../store/slice/appSlice'
+import StorageManager from '../../controller/StorageManager'
+import Constant from '../../controller/Constant'
+import { getAllNotificationAPI } from '../../controller/APIService'
 
 const NotificationList = ({ navigation }) => {
 
@@ -14,16 +17,25 @@ const NotificationList = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(true)
     const dispatch = useDispatch()
     
-    const getAllNotification = () => {
-        APIManager.getAllNotification()
-            .then(notification => {
-                setNotificationList(notification)
-            })
-            .catch(error => {
-                Alert.alert('Thông báo', error?.message)
-                setIsLoading(false)
-            })
-            .finally(() => setIsLoading(false))
+    const getAllNotification = async () => {
+        // APIManager.getAllNotification()
+        //     .then(notification => {
+        //         setNotificationList(notification)
+        //     })
+        //     .catch(error => {
+        //         Alert.alert('Thông báo', error?.message)
+        //         setIsLoading(false)
+        //     })
+        //     .finally(() => setIsLoading(false))
+        try {
+            let domain = await StorageManager.getData(Constant.keys.domain);
+            let response = await getAllNotificationAPI(domain);
+            setNotificationList(response);
+            setIsLoading(false);
+        } catch (error) {
+            Alert.alert('Thông báo', error?.message);
+            setIsLoading(false);
+        }
     }
 
     useFocusEffect(

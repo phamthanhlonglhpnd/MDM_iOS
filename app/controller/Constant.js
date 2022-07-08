@@ -78,7 +78,8 @@ export default {
         isOpened: 'isOpened',
         currentUser: 'currentUser',
         count: 'count',
-        department: 'department'
+        department: 'department',
+        domain: 'domain'
     },
     homeData: [
         {
@@ -182,11 +183,61 @@ export default {
             value: 'Đã thanh lý'
         }
     ],
-    containerScreenStyle: {
-        paddingHorizontal: 15,
-        backgroundColor: '#EBF3FE',
-        flex: 1,
-        paddingVertical: 20
-    }
+    headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+    },
+    // domains: [
+    //     "http://bv.qltbyt.com",
+    //     "http://bvkienanhp.qltbyt.com",
+    //     "http://bvdemo.qltbyt.com",
+    //     "http://bvcuchi.qltbyt.com",
+    //     "http://bme.qltbyt.com",
+    //     "http://bvnhihp.qltbyt.com",
+    //     "http://bvdakhoatinhthaibinh.qltbyt.com",
+    //     "http://bvungbuou.qltbyt.com",
+    // ]
+    domains: [
+        {
+            id: 1,
+            value: "http://bv.qltbyt.com",
+            img: ""
+        },
+        {
+            id: 2,
+            value: "http://bvkienanhp.qltbyt.com",
+            img: ""
+        },
+        {
+            id: 3,
+            value: "http://bvdemo.qltbyt.com",
+            img: ""
+        },
+        {
+            id: 4,
+            value: "http://bvcuchi.qltbyt.com",
+            img: ""
+        },
+        {
+            id: 5,
+            value: "http://bme.qltbyt.com",
+            img: ""
+        },
+        {
+            id: 6,
+            value: "http://bvnhihp.qltbyt.com",
+            img: ""
+        },
+        {
+            id: 7,
+            value: "http://bvdakhoatinhthaibinh.qltbyt.com",
+            img: ""
+        },
+        {
+            id: 8,
+            value: "http://bvungbuou.qltbyt.com",
+            img: ""
+        }
+    ]
 }
 

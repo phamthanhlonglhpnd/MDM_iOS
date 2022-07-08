@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     count: 0,
-    language: 'VN'
+    language: 'VN',
 }
 
 const app = createSlice({

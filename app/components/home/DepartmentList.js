@@ -5,6 +5,9 @@ import { FlatList, StyleSheet, Alert, View } from 'react-native'
 import APIManager from '../../controller/APIManager'
 import DepartmentItem from './components/DepartmentItem'
 import Loading from '../customs/Loading'
+import StorageManager from '../../controller/StorageManager'
+import Constant from '../../controller/Constant'
+import { getAllDepartmentsAPI } from '../../controller/APIService'
 
 const DepartmentList = () => {
 
@@ -12,14 +15,23 @@ const DepartmentList = () => {
     const [departments, setDepartments] = useState([])
     const [isLoading, setIsLoading] = useState(true)
 
-    const getAllDepartments = () => {
-        APIManager.getAllDepartments()
-            .then(departments => setDepartments(departments))
-            .catch(error => {
-                Alert.alert('Thông báo', error?.message)
-                setIsLoading(false)
-            })
-            .finally(() => setIsLoading(false))
+    const getAllDepartments = async () => {
+        // APIManager.getAllDepartments()
+        //     .then(departments => setDepartments(departments))
+        //     .catch(error => {
+        //         Alert.alert('Thông báo', error?.message)
+        //         setIsLoading(false)
+        //     })
+        //     .finally(() => setIsLoading(false))
+        try {
+            let domain = await StorageManager.getData(Constant.keys.domain);
+            let response = await getAllDepartmentsAPI(domain);
+            setDepartments(response);
+            setIsLoading(false);
+        } catch (error) {
+            Alert.alert('Thông báo', error?.message);
+            setIsLoading(false);
+        }
     }
 
     useFocusEffect(
@@ -45,12 +57,11 @@ const DepartmentList = () => {
 
     return (
         isLoading ? <Loading /> :
-        <View style={{ flex: 1 }}>
+        <View style={styles.container}>
             <FlatList
                 data={departments}
                 renderItem={renderItem}
                 keyExtractor={(item) => item?.id}
-                contentContainerStyle={styles.container}
             />
         </View>
     )

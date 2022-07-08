@@ -8,6 +8,8 @@ import Constant from '../../controller/Constant'
 import SearchInput from '../customs/SearchInput'
 import filter from '../../assets/images/filter.png'
 import Loading from '../customs/Loading'
+import StorageManager from '../../controller/StorageManager'
+import { getAllEquipmentsAPI } from '../../controller/APIService'
 
 
 const EquipmentList = () => {
@@ -17,10 +19,8 @@ const EquipmentList = () => {
     const [equipments, setEquipments] = useState([])
     const [keyword, setKeyword] = useState("");
     const [isLoading, setIsLoading] = useState(true)
-
     const actionSheetRef = useRef(null)
     const equipmentsRoot = useRef([])
-    
     const screen = route.params?.screen ?? ''
 
     const showEquipmentDetails = (equipmentId) => {
@@ -55,17 +55,30 @@ const EquipmentList = () => {
         }
     }
 
-    const getAllEquipments = () => {
-        APIManager.getAllEquipments(keyword)
-            .then(equipments => {
-                setEquipments(equipments)
-                equipmentsRoot.current = equipments
-            })
-            .catch(error => {
-                Alert.alert('Thông báo', error?.message)
-                setIsLoading(false)
-            })
-            .finally(() => setIsLoading(false))
+    const getAllEquipments = async () => {
+        // APIManager.getAllEquipments(keyword)
+        //     .then(equipments => {
+        //         setEquipments(equipments)
+        //         equipmentsRoot.current = equipments
+        //     })
+        //     .catch(error => {
+        //         Alert.alert('Thông báo', error?.message)
+        //         setIsLoading(false)
+        //     })
+        //     .finally(() => setIsLoading(false))
+        try {
+            let domain = await StorageManager.getData(Constant.keys.domain);
+            let response = await getAllEquipmentsAPI(domain, keyword);
+            if (!response) {
+                setEquipments([]);
+            }
+            setEquipments(response);
+            equipmentsRoot.current = response;
+            setIsLoading(false);
+        } catch (error) {
+            Alert.alert('Thông báo', error?.message);
+            setIsLoading(false);
+        }
     }
 
     const onSelectFilter = (index) => {

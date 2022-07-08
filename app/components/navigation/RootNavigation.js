@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import TabBarNavigation from './TabBarNavigation';
 import Constant from '../../controller/Constant';
-import Login2 from '../authentication/Login2';
+import Login from '../authentication/Login';
 import EquipmentList from '../home/EquipmentList';
 import StaffList from '../home/StaffList';
 import EquipmentDetails from '../home/EquipmentDetails';
@@ -59,7 +59,7 @@ const RootNavigation = () => {
                         />
                         <Stack.Screen
                             name={Constant.nameScreen.Login}
-                            component={Login2}
+                            component={Login}
                             options={{
                                 headerShown: false
                             }}

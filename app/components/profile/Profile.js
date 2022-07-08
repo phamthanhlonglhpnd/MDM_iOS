@@ -4,10 +4,10 @@ import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import AppManager from '../../controller/AppManager'
 import Constant from '../../controller/Constant'
 import StorageManager from '../../controller/StorageManager'
-import { SafeAreaView } from 'react-native-safe-area-context';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import APIManager from '../../controller/APIManager'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Loading from '../customs/Loading'
+import { getAllDepartmentsAPI } from '../../controller/APIService'
 
 const Profile = () => {
     const [department, setDepartment]=  useState('');
@@ -15,14 +15,30 @@ const Profile = () => {
     const navigation = useNavigation();
     const userInfo = AppManager.shared.currentUser;
 
+    const getAllDepartments = async () => {
+        try {
+            let domain = await StorageManager.getData(Constant.keys.domain);
+            let response = await getAllDepartmentsAPI(domain);
+            setDepartment(response[0].title);
+            setIsLoading(false);
+        } catch (error) {
+            Alert.alert('Thông báo', error?.message);
+            setIsLoading(false);
+        }
+    }
+
     useEffect(() => {
-        APIManager.getAllDepartments()
-            .then(department => setDepartment(department[0].title))
-            .catch(error => {
-                Alert.alert('Thông báo', error?.message)
-                setIsLoading(false);
-            })
-            .finally(() => setIsLoading(false))
+        // APIManager.getAllDepartments()
+        //     .then(department => setDepartment(department[0].title))
+        //     .catch(error => {
+        //         Alert.alert('Thông báo', error?.message)
+        //         setIsLoading(false);
+        //     })
+        //     .finally(() => setIsLoading(false))
+        getAllDepartments();
+        return () => {
+            
+        }
     }, [])
     
     const logOut = async () => {
@@ -35,7 +51,7 @@ const Profile = () => {
 
     return (
         isLoading ? <Loading /> :
-        <SafeAreaView 
+        <KeyboardAwareScrollView 
             style={styles.container}
         >
         <View style={styles.top}>
@@ -146,7 +162,7 @@ const Profile = () => {
             />
             <Text style={{fontSize: 14, marginLeft: 10, color: 'gray'}}>Đăng xuất</Text>
         </TouchableOpacity>
-    </SafeAreaView>
+    </KeyboardAwareScrollView>
     )
 }
 

@@ -1,154 +1,193 @@
-import React, { useState, useEffect } from 'react'
-import { Image, StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import Constant from '../../controller/Constant'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import { useNavigation } from '@react-navigation/core'
-import APIManager from '../../controller/APIManager'
-import RNProgressHud from 'progress-hud';
-import { ScrollView } from 'react-native-gesture-handler';
+import { useNavigation, StackActions } from '@react-navigation/core';
+import React, {useState, useEffect} from 'react'
+import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import FormInput from '../customs/FormInput';
+import { validateEmail, validatePassword } from '../../controller/validate';
 import hospitalLogo from '../../assets/images/kienan.jpg';
+import Constant from '../../controller/Constant'
+import Loading from '../customs/Loading';
+import StorageManager from '../../controller/StorageManager';
+import { loginAPI } from '../../controller/APIService';
 
-const Login = () => {
+export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [isShowPassword, setIsShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigation = useNavigation();
+  const isValidate = email !== "" && emailError === "" && password !=="" && passwordError === "";
 
-    const navigation = useNavigation()
-    const [isView, setIsView] = useState(false)
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-
-    const showHomeScreen = () => {
-        navigation.navigate(Constant.nameScreen.TabBar)
+  const showHomeScreen = () => {
+    navigation.navigate(Constant.nameScreen.TabBar)
     }
 
-    const onTapLogin = () => {
-        RNProgressHud.show()
-        APIManager.login(email, password)
-            .then(showHomeScreen)
-            .catch(error => alert(error?.message))
-            .finally(() => RNProgressHud.dismiss())
+    const onTapLogin = async () => {
+      setIsLoading(true)
+      try {
+        let domain = await StorageManager.getData(Constant.keys.domain)
+        await loginAPI(email, password, domain)
+        showHomeScreen()
+        setIsLoading(false)
+      } catch(error) {
+        Alert.alert('Thông báo', error?.message)
+        setIsLoading(false)
+      }
     }
 
-    useEffect(() => {
-        navigation.addListener('beforeRemove', (e) => {
-          e.preventDefault();
-        })
-      }, [navigation])
+    const goBackOnBoarding = async () => {
+      await StorageManager.setData(Constant.keys.domain, null)
+      navigation.navigate(Constant.nameScreen.OnBoarding)
+    }
 
-    return (
-        <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
-            <ScrollView>
-                <Image
-                    source={hospitalLogo}
-                    style={styles.logo}
+  return (
+    isLoading ? <Loading /> :
+    <KeyboardAwareScrollView style={styles.container}>
+      <Image
+        source={hospitalLogo}
+        resizeMode='cover'
+        style={styles.image}
+      />
+      <Text style={styles.text}>MDM</Text>
+      <View style={styles.viewInput}>
+        <FormInput
+          label='Email'
+          value={email}
+          error={emailError}
+          onChangeText={(email) => {
+            validateEmail(email, setEmailError);
+            setEmail(email);
+          }}
+          onBlur={() => {
+            if(emailError==="") {
+              setEmailError("");
+            }
+          }}
+          onFocus={() => validateEmail(email, setEmailError)}
+          appendComponent={
+            <View style={{ justifyContent: 'center', marginLeft: -40,}}>
+                <FontAwesome5
+                  name={emailError==="" ? 'check-circle': 'times-circle'}
+                  size={20}
+                  color={emailError==="" ? 'green' : 'gray'}
                 />
-                <Text style={styles.text}>
-                    Vui lòng điền đầy đủ thông tin
-                </Text>
-                <View style={styles.emailView}>
-                    <TextInput
-                        placeholder='Nhập email'
-                        style={styles.emailInput}
-                        keyboardType='email-address'
-                        value={email}
-                        onChangeText={text => setEmail(text)}
-                    />
-                </View>
-                <View style={styles.passwordView}>
-                    <TextInput
-                        placeholder='Nhập mật khẩu'
-                        style={styles.passwordInput}
-                        secureTextEntry={!isView}
-                        value={password}
-                        onChangeText={text => setPassword(text)}
-                    />
-                    <TouchableOpacity
-                        onPress={() => setIsView(!isView)}
-                    >
-                        <Ionicons name={isView ? 'eye' : 'eye-off'} size={28} color='gray' />
-                    </TouchableOpacity>
-                </View>
-                <TouchableOpacity
-                    onPress={onTapLogin}
-                    style={styles.loginButton}>
-                    <Text style={styles.loginText}>
-                        Đăng nhập
-                    </Text>
-                </TouchableOpacity>
-            </ScrollView>
-        </SafeAreaView>
-    )
+            </View>
+          }
+        />
+        <FormInput
+          label='Password'
+          value={password}
+          error={passwordError}
+          secureTextEntry={!isShowPassword}
+          onChangeText={(password) => {
+            validatePassword(password, setPasswordError);
+            setPassword(password)
+          }}
+          onBlur={() => {
+            if(password==="") {
+              setPasswordError("");
+            }
+          }}
+          onFocus={() => validatePassword(password, setPasswordError)}
+          appendComponent={
+            <TouchableOpacity
+              style={{
+                marginLeft: -45,
+                justifyContent: 'center'
+              }}
+              onPress={() => setIsShowPassword(!isShowPassword)}
+            >
+              <FontAwesome5
+                name={isShowPassword ? 'eye' : 'eye-slash'}
+                size={20}
+                color='gray'
+              />
+            </TouchableOpacity>
+          }
+        />
+        
+        <TouchableOpacity
+          style={[
+            styles.login, 
+            {
+              backgroundColor: isValidate ? '#F7AC65' : 'rgba(227, 120, 75, 0.4)'
+            }
+          ]}
+          onPress={onTapLogin}
+          disabled={!isValidate}
+        >
+          <Text style={styles.loginText}>Đăng Nhập</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.login, 
+            {
+              backgroundColor: '#F7AC65'
+            }
+          ]}
+          onPress={goBackOnBoarding}
+        >
+          <Text style={styles.loginText}>Quay lại màn hình bắt đầu</Text>
+        </TouchableOpacity>
+      </View> 
+    </KeyboardAwareScrollView>
+  )
 }
 
-export default Login
-
 const styles = StyleSheet.create({
-    logo: {
-        width: 150,
-        height: 150,
-        borderRadius: 75,
-        alignSelf: 'center',
-        marginTop: 40,
-        marginBottom: 40,
-        borderWidth: 2,
-        borderColor: '#8475F6'
-    },
-    text: {
-        fontSize: 25,
-        fontWeight: 'bold',
-        color: 'black',
-        alignSelf: 'center'
-    },
-    emailInput: {
-        height: 56,
-        backgroundColor: 'white',
-        borderRadius: 40,
-        paddingHorizontal: 20,
-        marginTop: 10,
-        fontSize: 16,
-        shadowColor: 'black',
-        shadowOpacity: 1,
-        shadowRadius: 2,
-        shadowOffset: { width: 0, height: 2 },
-        elevation: 2
-    },
-    emailView: {
-        marginHorizontal: 20,
-        marginTop: 20
-    },
-    passwordView: {
-        marginHorizontal: 20,
-        marginTop: 20,
-        height: 56,
-        borderRadius: 40,
-        paddingHorizontal: 20,
-        flexDirection: 'row',
-        alignItems: 'center',
-        shadowColor: 'black',
-        shadowOpacity: 1,
-        shadowRadius: 2,
-        shadowOffset: { width: 0, height: 2 },
-        backgroundColor: 'white',
-        elevation: 2
-    },
-    passwordInput: {
-        fontSize: 16,
-        flex: 1
-    },
-    title: {
-
-    },
-    loginButton: {
-        height: 56,
-        borderRadius: 40,
-        backgroundColor: Constant.color.main,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginHorizontal: 20,
-        marginTop: 30
-    },
-    loginText: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: 'white'
-    }
+  container: {
+    flex: 1,
+    marginVertical: 30
+  },
+  image: {
+    width: 150,
+    height: 150,
+    justifyContent: 'center',
+    borderRadius: 20,
+    alignSelf: 'center', 
+    marginTop: 40,
+    borderWidth: 2,
+    borderColor: '#FF6C44'
+  },
+  text: {
+    textAlign: 'center',
+    fontSize: 25, 
+    fontWeight: 'bold',
+    color: 'black',
+    marginVertical: 30
+  },
+  name: {
+    flexDirection: 'column',
+    marginBottom: 30
+  },
+  viewInput: {
+    flexDirection: 'column',
+    marginHorizontal: 30
+  },
+  input: {
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderRadius: 30, 
+    marginBottom: 30, 
+    paddingHorizontal: 20,
+    fontSize: 16
+  },
+  login: {
+    borderRadius: 30, 
+    marginTop: 30, 
+    paddingVertical: 18
+  }, 
+  loginText: {
+    textAlign: 'center', 
+    fontSize: 16,
+    color: 'white',
+  },
+  showPassword: {
+    position: 'absolute',
+    top: 15,
+    right: 20
+  }
 })

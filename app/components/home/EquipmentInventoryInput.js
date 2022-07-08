@@ -6,6 +6,8 @@ import APIManager from '../../controller/APIManager'
 import Constant from '../../controller/Constant'
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import Loading from '../customs/Loading'
+import StorageManager from '../../controller/StorageManager'
+import { requestInventoryAPI } from '../../controller/APIService'
 
 const EquipmentInventoryInput = () => {
 
@@ -47,16 +49,26 @@ const EquipmentInventoryInput = () => {
         setIsLoading(false)
     }
 
-    const requestInventory = () => {
+    const requestInventory = async () => {
         if (note === '') {
             Alert.alert('Thông báo', 'Vui lòng nhập ghi chú kiểm kê!')
             return
         }
         setIsLoading(true)
-        APIManager.requestInventory(equipmentId, note)
-            .then(response => onSuccessed())
-            .catch(e => onFailed())
-            .finally(() => setIsLoading(false))
+        // APIManager.requestInventory(equipmentId, note)
+        //     .then(response => onSuccessed())
+        //     .catch(e => onFailed())
+        //     .finally(() => setIsLoading(false))
+        try {
+            let domain = await StorageManager.getData(Constant.keys.domain);
+            await requestInventoryAPI(domain, equipmentId, note);
+            onSuccessed();
+            setIsLoading(false)
+        } catch (error) {
+            Alert.alert('Thông báo', error?.message);
+            onFailed();
+            setIsLoading(false)
+        }
     }
 
     useEffect(() => {

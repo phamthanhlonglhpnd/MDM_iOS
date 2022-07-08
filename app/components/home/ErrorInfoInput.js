@@ -8,6 +8,8 @@ import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import Loading from '../customs/Loading'
 import { useDispatch } from 'react-redux'
 import { asyncIncrementCount } from '../../store/slice/appSlice'
+import StorageManager from '../../controller/StorageManager'
+import { requestErrorAPI } from '../../controller/APIService'
 
 const ErrorInfoInput = () => {
 
@@ -50,17 +52,27 @@ const ErrorInfoInput = () => {
         setIsLoading(false)
     }
 
-    const requestError = () => {
+    const requestError = async () => {
         if (reason === '') {
             Alert.alert('Thông báo', 'Vui lòng nhập lý do hỏng!')
             return
         }
         setIsLoading(true)
         dispatch(asyncIncrementCount())
-        APIManager.requestError(equipmentId, reason)
-            .then(response => onSuccessed())
-            .catch(e => onFailed())
-            .finally(() => setIsLoading(false))
+        // APIManager.requestError(equipmentId, reason)
+        //     .then(response => onSuccessed())
+        //     .catch(e => onFailed())
+        //     .finally(() => setIsLoading(false))
+        try {
+            let domain = await StorageManager.getData(Constant.keys.domain);
+            await requestErrorAPI(domain, equipmentId, reason);
+            onSuccessed();
+            setIsLoading(false)
+        } catch (error) {
+            Alert.alert('Thông báo', error?.message);
+            onFailed();
+            setIsLoading(false)
+        }
     }
 
     useEffect(() => {

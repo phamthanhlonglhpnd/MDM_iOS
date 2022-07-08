@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TextInput } from 'react-native'
 
 export default function FormInput({label, error, onChangeText, onBlur, onFocus, value, appendComponent, secureTextEntry}) {
     return (
-        <View style={styles.container}>
+        <View>
             <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
                 <Text style={styles.label}>{label}</Text>
                 <Text style={{ color: 'red' }}>{error}</Text>
@@ -16,6 +16,7 @@ export default function FormInput({label, error, onChangeText, onBlur, onFocus, 
                     secureTextEntry={secureTextEntry}
                     onBlur={onBlur}
                     onFocus={onFocus}
+                    autoFocus={false}
                 />
                 {appendComponent}
             </View>

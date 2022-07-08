@@ -6,6 +6,8 @@ import APIManager from '../../controller/APIManager'
 import EquipmentItem from './components/EquipmentItem'
 import Constant from '../../controller/Constant'
 import Loading from '../customs/Loading'
+import StorageManager from '../../controller/StorageManager'
+import { getAllEquipmentsByDepartmentAPI } from '../../controller/APIService'
 
 
 const DepartmentList = () => {
@@ -15,14 +17,26 @@ const DepartmentList = () => {
     const [equipments, setEquipments] = useState([])
     const [isLoading, setIsLoading] = useState(true)
 
-    const getAllEquipments = () => {
-        APIManager.getAllEquipmentsByDepartment(route.params.id)
-            .then(equipments => setEquipments(equipments))
-            .catch(error => {
-                Alert.alert('Thông báo', error?.message)
-                setIsLoading(false)
-            })
-            .finally(() => setIsLoading(false))
+    const getAllEquipments = async () => {
+        // APIManager.getAllEquipmentsByDepartment(route.params.id)
+        //     .then(equipments => setEquipments(equipments))
+        //     .catch(error => {
+        //         Alert.alert('Thông báo', error?.message)
+        //         setIsLoading(false)
+        //     })
+        //     .finally(() => setIsLoading(false))
+        try {
+            let domain = await StorageManager.getData(Constant.keys.domain);
+            let response = await getAllEquipmentsByDepartmentAPI(domain, route.params.id);
+            if (!response) {
+                setEquipments([]);
+            }
+            setEquipments(response);
+            setIsLoading(false);
+        } catch (error) {
+            Alert.alert('Thông báo', error?.message);
+            setIsLoading(false);
+        }
     }
 
     const goToInventory = (title, id, model, serial) => {
