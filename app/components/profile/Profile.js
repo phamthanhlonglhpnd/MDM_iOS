@@ -10,7 +10,7 @@ import Loading from '../customs/Loading'
 import { getAllDepartmentsAPI } from '../../controller/APIService'
 
 const Profile = () => {
-    const [department, setDepartment]=  useState('');
+    const [department, setDepartment] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const navigation = useNavigation();
     const userInfo = AppManager.shared.currentUser;
@@ -28,19 +28,12 @@ const Profile = () => {
     }
 
     useEffect(() => {
-        // APIManager.getAllDepartments()
-        //     .then(department => setDepartment(department[0].title))
-        //     .catch(error => {
-        //         Alert.alert('Thông báo', error?.message)
-        //         setIsLoading(false);
-        //     })
-        //     .finally(() => setIsLoading(false))
         getAllDepartments();
         return () => {
-            
+
         }
     }, [])
-    
+
     const logOut = async () => {
         AppManager.shared.currentUser = null
         await StorageManager.setData(Constant.keys.currentUser, null)
@@ -51,118 +44,118 @@ const Profile = () => {
 
     return (
         isLoading ? <Loading /> :
-        <KeyboardAwareScrollView 
-            style={styles.container}
-        >
-        <View style={styles.top}>
-            <Text style={{
-                fontSize: 16,
-                fontWeight: 'bold',
-                color: 'black',
-                textAlign: 'center'
-            }}>
-                Thông tin cá nhân
-            </Text>
-        </View>
-        <Image
-            style={styles.image}
-            source={{
-                uri: userInfo?.profile_photo_url
-            }}
-        />
-        <View style={styles.middle}>
-            <View style={styles.middleComponent}>
-                <Text style={{
-                    fontSize: 14,
-                    color: 'gray'
-                }}>
-                    Họ tên
-                </Text>
-                <Text style={styles.infor}>
-                    {userInfo?.displayname}
-                </Text>
-            </View>
-            <View style={styles.middleComponent}>
-                <Text style={{
-                        fontSize: 14,
-                        color: 'gray'
+            <KeyboardAwareScrollView
+                style={styles.container}
+            >
+                <View style={styles.top}>
+                    <Text style={{
+                        fontSize: 16,
+                        fontWeight: 'bold',
+                        color: 'black',
+                        textAlign: 'center'
                     }}>
-                    Số điện thoại
-                </Text>
-                <Text style={styles.infor}>
-                    {userInfo?.phone}
-                </Text>
-            </View>
-            <View style={styles.middleComponent}>
-                <Text style={{
-                        fontSize: 14,
-                        color: 'gray'
-                    }}>
-                    Khoa/Phòng
-                </Text>
-                <Text style={styles.infor}>
-                    {department}
-                </Text>
-            </View>
-        </View>
-        <View style={styles.middle}>
-            <View style={styles.middleComponent}>
-                <Text style={{
-                    fontSize: 14,
-                    color: 'gray'
-                }}>
-                    Ngày sinh
-                </Text>
-                <Text style={styles.infor}>
-                    {userInfo?.birthday}
-                </Text>
-            </View>
-            <View style={styles.middleComponent}>
-                <Text style={{
-                        fontSize: 14,
-                        color: 'gray'
-                    }}>
-                    Giới tính
-                </Text>
-                <Text style={styles.infor}>
-                    {userInfo?.gender}
-                </Text>
-            </View>
-            <View style={styles.middleComponent}>
-                <Text style={{
-                        fontSize: 14,
-                        color: 'gray'
-                    }}>
-                    Email
-                </Text>
-                <Text style={styles.infor}>
-                    {userInfo?.email}
-                </Text>
-            </View>
-            <View style={styles.middleComponent}>
-                <Text style={{
-                        fontSize: 14,
-                        color: 'gray'
-                    }}>
-                    Địa chỉ
-                </Text>
-                <Text style={styles.infor}>
-                    {userInfo?.address}
-                </Text>
-            </View>
-        </View>
-        <TouchableOpacity
-            onPress={logOut}
-            style={styles.logout}
-        >
-            <FontAwesome5
-                name='sign-out-alt'
-                size={25}
-                color='#FF6C44'
-            />
-            <Text style={{fontSize: 14, marginLeft: 10, color: 'gray'}}>Đăng xuất</Text>
-        </TouchableOpacity>
-    </KeyboardAwareScrollView>
+                        Thông tin cá nhân
+                    </Text>
+                </View>
+                <Image
+                    style={styles.image}
+                    source={{
+                        uri: userInfo?.profile_photo_url
+                    }}
+                />
+                <View style={styles.middle}>
+                    <View style={styles.middleComponent}>
+                        <Text style={{
+                            fontSize: 14,
+                            color: 'gray'
+                        }}>
+                            Họ tên
+                        </Text>
+                        <Text style={styles.infor}>
+                            {userInfo?.displayname}
+                        </Text>
+                    </View>
+                    <View style={styles.middleComponent}>
+                        <Text style={{
+                            fontSize: 14,
+                            color: 'gray'
+                        }}>
+                            Số điện thoại
+                        </Text>
+                        <Text style={styles.infor}>
+                            {userInfo?.phone}
+                        </Text>
+                    </View>
+                    <View style={styles.middleComponent}>
+                        <Text style={{
+                            fontSize: 14,
+                            color: 'gray'
+                        }}>
+                            Khoa/Phòng
+                        </Text>
+                        <Text style={styles.infor}>
+                            {department}
+                        </Text>
+                    </View>
+                </View>
+                <View style={styles.middle}>
+                    <View style={styles.middleComponent}>
+                        <Text style={{
+                            fontSize: 14,
+                            color: 'gray'
+                        }}>
+                            Ngày sinh
+                        </Text>
+                        <Text style={styles.infor}>
+                            {userInfo?.birthday}
+                        </Text>
+                    </View>
+                    <View style={styles.middleComponent}>
+                        <Text style={{
+                            fontSize: 14,
+                            color: 'gray'
+                        }}>
+                            Giới tính
+                        </Text>
+                        <Text style={styles.infor}>
+                            {userInfo?.gender}
+                        </Text>
+                    </View>
+                    <View style={styles.middleComponent}>
+                        <Text style={{
+                            fontSize: 14,
+                            color: 'gray'
+                        }}>
+                            Email
+                        </Text>
+                        <Text style={styles.infor}>
+                            {userInfo?.email}
+                        </Text>
+                    </View>
+                    <View style={styles.middleComponent}>
+                        <Text style={{
+                            fontSize: 14,
+                            color: 'gray'
+                        }}>
+                            Địa chỉ
+                        </Text>
+                        <Text style={styles.infor}>
+                            {userInfo?.address}
+                        </Text>
+                    </View>
+                </View>
+                <TouchableOpacity
+                    onPress={logOut}
+                    style={styles.logout}
+                >
+                    <FontAwesome5
+                        name='sign-out-alt'
+                        size={25}
+                        color='#FF6C44'
+                    />
+                    <Text style={{ fontSize: 14, marginLeft: 10, color: 'gray' }}>Đăng xuất</Text>
+                </TouchableOpacity>
+            </KeyboardAwareScrollView>
     )
 }
 
@@ -181,7 +174,7 @@ const styles = StyleSheet.create({
     middle: {
         backgroundColor: "#DDDDDD",
         marginVertical: 15,
-        borderRadius: 20, 
+        borderRadius: 20,
         paddingHorizontal: 20
     },
     middleComponent: {

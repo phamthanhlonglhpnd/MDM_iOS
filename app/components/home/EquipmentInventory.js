@@ -3,7 +3,6 @@ import { StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, FlatList } 
 import Constant from '../../controller/Constant'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { StackActions, useNavigation } from '@react-navigation/native'
-import APIManager from '../../controller/APIManager'
 import EquipmentItem from './components/EquipmentItem'
 import Loading from '../customs/Loading'
 import StorageManager from '../../controller/StorageManager'
@@ -22,28 +21,6 @@ const EquipmentInventory = () => {
             Alert.alert('Thông báo', 'Vui lòng nhập thông tin để tìm kiếm!')
             return
         }
-        // APIManager.getAllEquipments(keyword)
-        //     .then(equipments => {
-        //         let newEquipments = [];
-        //         equipments.map(equipment => {
-        //             if(equipment.status === "active") {
-        //                 newEquipments.push(equipment);
-        //             }
-        //             return newEquipments;
-        //         })
-        //         if(newEquipments.length === 0) {
-        //             setIsRemind(true)
-        //         }
-        //         setEquipments(newEquipments);
-        //         setIsRemind(false);
-        //         setKeyword("");
-        //     })
-        //     .catch(error => {
-        //         Alert.alert('Thông báo', error?.message);
-        //         setKeyword("")
-        //         setIsLoading(false)
-        //     })
-        //     .finally(() => setIsLoading(false))
         try {
             let domain = await StorageManager.getData(Constant.keys.domain);
             let response = await getAllEquipmentsAPI(domain, keyword);

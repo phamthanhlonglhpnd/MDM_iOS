@@ -2,7 +2,6 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import React, { useState, useEffect } from 'react'
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { ScrollView, TextInput } from 'react-native-gesture-handler'
-import APIManager from '../../controller/APIManager'
 import Constant from '../../controller/Constant'
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import Loading from '../customs/Loading'
@@ -37,6 +36,7 @@ const ErrorInfoInput = () => {
             'Gửi yêu cầu báo hỏng thành công!',
             'Vui lòng xem chi tiết ở mục thông báo!'
         )
+        dispatch(asyncIncrementCount())
         setReason("");
         setIsLoading(false)
         navigation.navigate(Constant.nameScreen.Home);
@@ -58,11 +58,6 @@ const ErrorInfoInput = () => {
             return
         }
         setIsLoading(true)
-        dispatch(asyncIncrementCount())
-        // APIManager.requestError(equipmentId, reason)
-        //     .then(response => onSuccessed())
-        //     .catch(e => onFailed())
-        //     .finally(() => setIsLoading(false))
         try {
             let domain = await StorageManager.getData(Constant.keys.domain);
             await requestErrorAPI(domain, equipmentId, reason);

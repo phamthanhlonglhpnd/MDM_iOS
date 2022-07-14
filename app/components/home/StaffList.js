@@ -3,7 +3,6 @@ import React, { useLayoutEffect, useState, useCallback } from 'react'
 import { useFocusEffect } from '@react-navigation/native'
 import { StyleSheet, View, Alert } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
-import APIManager from '../../controller/APIManager'
 import StaffItem from './components/StaffItem'
 import Loading from '../customs/Loading'
 import { getAllUsersAPI } from '../../controller/APIService'
@@ -17,13 +16,6 @@ const StaffList = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     const getAllUsers = async () => {
-        // APIManager.getAllUser()
-        //     .then(staffs => setStaffs(staffs))
-        //     .catch(error => {
-        //         Alert.alert('Thông báo', error?.message)
-        //         setIsLoading(false)
-        //     })
-        //     .finally(() => setIsLoading(false))
         try {
             let domain = await StorageManager.getData(Constant.keys.domain);
             let response = await getAllUsersAPI(domain);

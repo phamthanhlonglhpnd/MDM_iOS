@@ -3,30 +3,18 @@ import { useFocusEffect } from '@react-navigation/native'
 import { StyleSheet, View, Alert } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import NotificationItem from './NotificationItem'
-import APIManager from '../../controller/APIManager'
 import Loading from '../customs/Loading'
-import { useDispatch } from 'react-redux'
-import { resetCount } from '../../store/slice/appSlice'
 import StorageManager from '../../controller/StorageManager'
 import Constant from '../../controller/Constant'
 import { getAllNotificationAPI } from '../../controller/APIService'
 
-const NotificationList = ({ navigation }) => {
+const NotificationList = () => {
 
     const [notificationList, setNotificationList] = useState([])
     const [isLoading, setIsLoading] = useState(true)
-    const dispatch = useDispatch()
+    
     
     const getAllNotification = async () => {
-        // APIManager.getAllNotification()
-        //     .then(notification => {
-        //         setNotificationList(notification)
-        //     })
-        //     .catch(error => {
-        //         Alert.alert('Thông báo', error?.message)
-        //         setIsLoading(false)
-        //     })
-        //     .finally(() => setIsLoading(false))
         try {
             let domain = await StorageManager.getData(Constant.keys.domain);
             let response = await getAllNotificationAPI(domain);
@@ -46,14 +34,6 @@ const NotificationList = ({ navigation }) => {
             }
         }, [])
     )
-
-    useEffect(() => {
-        const unsubscribe = navigation.addListener('tabPress', (e) => {
-            dispatch(resetCount())
-        });
-    
-        return unsubscribe;
-      }, [navigation]);
 
     const renderItem = ({ item }) => {
         return (

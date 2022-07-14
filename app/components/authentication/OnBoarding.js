@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, ImageBackground, Image, TouchableOpacity, FlatList, LogBox } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import backgroundOnBoarding from '../../assets/images/backgroundOnBoarding.png';
 import FormInput from '../customs/FormInput';
@@ -15,12 +14,13 @@ export default function OnBoarding({ navigation }) {
     const [domainError, setDomainError] = useState('');
     const [isShowDomains, setIsShowDomains] = useState(false);
     const isValidate = domain !== '' && domainError === '';
+    const isMounted = useRef(true);
 
     const gotoLogin = async () => {
-        navigation.navigate(Constant.nameScreen.Login);
-        await StorageManager.setData(Constant.keys.domain, domain);
+        await StorageManager.setData(Constant.keys.domain, domain.toLowerCase());
         setDomain('');
         setIsShowDomains(false);
+        navigation.navigate(Constant.nameScreen.Login);
     }
 
     const fillDomain = (domain) => {
@@ -34,13 +34,24 @@ export default function OnBoarding({ navigation }) {
         setIsShowDomains(false);
     }
 
+    const checkDomainError = () => {
+        if(domainError === "") {
+            setDomainError("");
+        }
+    }
+
     useEffect(() => {
         LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
-      }, [])
+        return () => {
+            
+        }
+    }, [])
+
+    useEffect(() => () => { isMounted.current = false }, [])
 
     const renderItem = ({ item }) => {
         return (
-            <TouchableOpacity 
+            <TouchableOpacity
                 style={styles.domain}
                 onPress={() => selectDomain(item?.value)}
             >
@@ -61,24 +72,22 @@ export default function OnBoarding({ navigation }) {
                     style={styles.image}
                     source={loginBackGround}
                 />
-                <View style={{ marginTop: 60}}>
+                <View style={{ marginTop: 60 }}>
                     <Text style={styles.title}>Quản lý thiết bị và vật tư y tế</Text>
                 </View>
-                <View style={{ marginTop: 30}}>
-                    <Text style={[styles.text, { color: 'black'}]}>Nhập địa chỉ trang web của bệnh viện</Text>
+                <View style={{ marginTop: 30 }}>
+                    <Text style={[styles.text, { color: 'black' }]}>Nhập địa chỉ trang web của bệnh viện</Text>
                     <FormInput
                         value={domain}
                         onChangeText={(domain) => fillDomain(domain)}
-                        onBlur={() => {
-                            setDomainError("")
-                        }}
+                        onBlur={checkDomainError}
                         onFocus={() => setIsShowDomains(true)}
                         appendComponent={
-                            <View style={{ justifyContent: 'center', marginLeft: -40,}}>
+                            <View style={{ justifyContent: 'center', marginLeft: -40, }}>
                                 <FontAwesome5
-                                  name={domainError==="" ? 'check-circle': 'times-circle'}
-                                  size={20}
-                                  color={domainError==="" ? 'green' : 'red'}
+                                    name={domainError === "" ? 'check-circle' : 'times-circle'}
+                                    size={20}
+                                    color={domainError === "" ? 'green' : 'red'}
                                 />
                             </View>
                         }
@@ -86,22 +95,22 @@ export default function OnBoarding({ navigation }) {
                 </View>
                 {
                     isShowDomains ?
-                    <View style={styles.domains}>
-                        <FlatList
-                            data={Constant.domains}
-                            renderItem={renderItem}
-                            keyExtractor={(item) => item?.id}
-                        />
-                    </View> : <View/>
+                        <View style={styles.domains}>
+                            <FlatList
+                                data={Constant.domains}
+                                renderItem={renderItem}
+                                keyExtractor={(item) => item?.id}
+                            />
+                        </View> : <View />
                 }
             </View>
             <TouchableOpacity
                 style={[
-                    styles.button, 
+                    styles.button,
                     {
-                      backgroundColor: isValidate ? '#FF6C44' : 'rgba(227, 120, 75, 0.4)'
+                        backgroundColor: isValidate ? '#FF6C44' : 'rgba(227, 120, 75, 0.4)'
                     }
-                  ]}
+                ]}
                 onPress={() => gotoLogin()}
                 disabled={!isValidate}
             >
@@ -128,17 +137,17 @@ const styles = StyleSheet.create({
         paddingVertical: 20
     },
     hospitalLogo: {
-        height: 60, 
+        height: 60,
         width: 60,
         borderRadius: 20,
         marginRight: 20
     },
     introApp: {
-        flexDirection: 'row', 
-        alignSelf: 'center', 
+        flexDirection: 'row',
+        alignSelf: 'center',
         alignItems: 'center',
         marginTop: 20
-    }, 
+    },
     nameApp: {
         fontSize: 25,
         fontWeight: 'bold',
@@ -164,11 +173,10 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: 'white',
         fontSize: 16,
-        // fontWeight: 'bold',
-    }, 
+    },
     title: {
         textAlign: 'center',
-        fontSize: 20, 
+        fontSize: 20,
         fontWeight: 'bold',
         color: 'black',
         marginBottom: 10

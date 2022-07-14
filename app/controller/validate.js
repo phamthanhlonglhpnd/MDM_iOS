@@ -6,7 +6,7 @@ const isValidateEmail = (value) => {
 }
 
 const isValidateDomain = (value) => {
-    const result = Constant.domains.filter(item => item.value === value);
+    const result = Constant.domains.filter(item => item.value === value.toLowerCase());
     const flag = result.length > 0 ? true : false;
     return flag;
 }

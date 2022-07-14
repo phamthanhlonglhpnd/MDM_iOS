@@ -23,7 +23,7 @@ export const { incrementCount, resetCount } = app.actions
 export const asyncIncrementCount = () => (dispatch) => {
     setTimeout(() => {
         dispatch(incrementCount())
-      }, 4000)
+      }, 3000)
 }
 
 export const selectCount = state => state.app.count;

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { TouchableOpacity, Text, Linking, View, Image, StyleSheet, PermissionsAndroid } from 'react-native';
+import { TouchableOpacity, Text, Linking, View, Image, StyleSheet, Alert } from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
 import { Dimensions } from 'react-native';
@@ -7,6 +7,8 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import qrcode from '../../assets/images/qrcode.png';
 import Constant from '../../controller/Constant';
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 
 const deviceWidth = Dimensions.get('screen').width;
 const deviceHeight = Dimensions.get('screen').height;
@@ -22,28 +24,16 @@ class Scan extends Component {
         };
     }
 
-    requestCameraPermission = async () => {
-        try {
-          const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.CAMERA,
-            {
-              title: "Cool Photo App Camera Permission",
-              message:
-                "Cool Photo App needs access to your camera " +
-                "so you can take awesome pictures.",
-              buttonNeutral: "Ask Me Later",
-              buttonNegative: "Cancel",
-              buttonPositive: "OK"
+    requestCameraPermission = () => {
+        request(PERMISSIONS.IOS.CAMERA)
+        .then((result) => {
+            if (result === RESULTS.GRANTED) {
+                Alert.alert('Thông báo', "You can use the camera");
+            } else {
+                Alert.alert('Thông báo', "Camera permission denied");
             }
-          );
-          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            alert("You can use the camera");
-          } else {
-            alert("Camera permission denied");
-          }
-        } catch (err) {
-          alert(err);
-        }
+        })
+        .catch(error => Alert.alert('Thông báo', error))
     };
 
     onSuccess = (e) => {
@@ -80,22 +70,22 @@ class Scan extends Component {
     render() {
         const { scan, ScanResult, result, isFlashMode } = this.state
         return (
-            <View style={styles.scrollViewStyle}>
+            <KeyboardAwareScrollView style={styles.scrollViewStyle}>
                 <Fragment>
                     <View style={styles.header}>
                         <TouchableOpacity onPress={this.requestCameraPermission}>
-                            <Image source={qrcode} style={{height: 36, width: 36}}></Image>
+                            <Image source={qrcode} style={{ height: 36, width: 36 }}></Image>
                         </TouchableOpacity>
                         <Text style={styles.textTitle}>Scan QR Code</Text>
                     </View>
                     {!scan && !ScanResult &&
                         <View style={styles.cardView} >
                             <Text numberOfLines={8} style={styles.descText}>Di chuyển camera {"\n"} đến gần mã QR Code</Text>
-                            <Image source={qrcode} style={{margin: 20, height: 200, width: 200}}></Image>
+                            <Image source={qrcode} style={{ margin: 20, height: 200, width: 200 }}></Image>
                             <TouchableOpacity onPress={this.activeQR} style={styles.buttonScan}>
                                 <View style={styles.buttonWrapper}>
-                                    <FontAwesome5 name='camera' size={30} color='#2190FB'/>
-                                    <Text style={{...styles.buttonTextStyle, color: '#2196f3', marginLeft: 20}}>Scan QR Code</Text>
+                                    <FontAwesome5 name='camera' size={30} color='#2190FB' />
+                                    <Text style={{ ...styles.buttonTextStyle, color: '#2196f3', marginLeft: 20 }}>Scan QR Code</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -104,16 +94,16 @@ class Scan extends Component {
                         <Fragment>
                             <Text style={styles.textTitle1}>Kết quả</Text>
                             <View style={ScanResult ? styles.scanCardView : styles.cardView}>
-                                <Text style={{color: Constant.color.text}}>Type : {result.type}</Text>
-                                <Text style={{color: Constant.color.text}}>Equipment's ID : {result.data}</Text>
+                                <Text style={{ color: Constant.color.text }}>Type : {result.type}</Text>
+                                <Text style={{ color: Constant.color.text }}>Equipment's ID : {result.data}</Text>
                                 <TouchableOpacity onPress={() => this.showEquipmentDetails(result.data)} style={styles.buttonDetail}>
                                     <View style={styles.buttonWrapper}>
-                                        <Text style={{...styles.buttonTextStyle, color: '#2196f3', textAlign: 'center'}}>Chi tiết thiết bị</Text>
+                                        <Text style={{ ...styles.buttonTextStyle, color: '#2196f3', textAlign: 'center' }}>Chi tiết thiết bị</Text>
                                     </View>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={this.scanAgain} style={styles.buttonScan}>
                                     <View style={styles.buttonWrapper}>
-                                        <Text style={{...styles.buttonTextStyle, color: '#2196f3', textAlign: 'center'}}>Ấn để tiếp tục scan</Text>
+                                        <Text style={{ ...styles.buttonTextStyle, color: '#2196f3', textAlign: 'center' }}>Ấn để tiếp tục scan</Text>
                                     </View>
                                 </TouchableOpacity>
                             </View>
@@ -128,22 +118,22 @@ class Scan extends Component {
                             onRead={this.onSuccess}
                             bottomContent={
                                 <View>
-                                        <TouchableOpacity  
-                                            onPress={() => {
-                                                this.scanner.reactivate()
-                                                this.setState({
-                                                    isFlashMode: !this.state.isFlashMode
-                                                })
-                                            }} 
-                                            onLongPress={() => this.setState({ scan: false })}>
-                                                <Ionicons name={isFlashMode ? 'flash' : 'flash-off'} size={30} color='black'/>
-                                        </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            this.scanner.reactivate()
+                                            this.setState({
+                                                isFlashMode: !this.state.isFlashMode
+                                            })
+                                        }}
+                                        onLongPress={() => this.setState({ scan: false })}>
+                                        <Ionicons name={isFlashMode ? 'flash' : 'flash-off'} size={30} color='black' />
+                                    </TouchableOpacity>
                                 </View>
                             }
                         />
                     }
                 </Fragment>
-            </View>
+            </KeyboardAwareScrollView>
         );
     }
 }
@@ -151,7 +141,7 @@ class Scan extends Component {
 const styles = StyleSheet.create({
     scrollViewStyle: {
         flex: 1,
-        justifyContent: 'flex-start',
+        // justifyContent: 'flex-start',
         backgroundColor: '#2196f3'
     },
     header: {
@@ -203,7 +193,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     buttonWrapper: {
-        display: 'flex', 
+        display: 'flex',
         flexDirection: 'row',
         alignItems: 'center'
     },
@@ -248,8 +238,8 @@ const styles = StyleSheet.create({
         color: '#000',
     },
     bottomContent: {
-       width: deviceWidth,
-       height: 120,
+        width: deviceWidth,
+        height: 120,
     },
     buttonTouchable: {
         fontSize: 21,
@@ -275,21 +265,3 @@ const styles = StyleSheet.create({
 })
 
 export default Scan;
-// import React from 'react';
-// import Alert from 'react-native'
-// import { CameraScreen } from 'react-native-camera-kit';
-
-// const Scan = () => {
-//     return (
-//         <CameraScreen
-//             // Barcode props
-//             scanBarcode={true}
-//             onReadCode={(event) => Alert.alert('QR code found')} // optional
-//             showFrame={true} // (default false) optional, show frame with transparent layer (qr code or barcode will be read on this area ONLY), start animation for scanner,that stoped when find any code. Frame always at center of the screen
-//             laserColor='red' // (default red) optional, color of laser in scanner frame
-//             frameColor='white' // (default white) optional, color of border of scanner frame
-//         />
-//     )
-// }
-
-// export default Scan;

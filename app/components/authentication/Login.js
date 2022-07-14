@@ -1,5 +1,5 @@
-import { useNavigation, StackActions } from '@react-navigation/core';
-import React, {useState, useEffect} from 'react'
+import { useNavigation } from '@react-navigation/core';
+import React, { useState, useEffect } from 'react'
 import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
@@ -19,121 +19,127 @@ export default function Login() {
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
-  const isValidate = email !== "" && emailError === "" && password !=="" && passwordError === "";
+  const isValidate = email !== "" && emailError === "" && password !== "" && passwordError === "";
 
   const showHomeScreen = () => {
     navigation.navigate(Constant.nameScreen.TabBar)
-    }
+  }
 
-    const onTapLogin = async () => {
-      setIsLoading(true)
-      try {
-        let domain = await StorageManager.getData(Constant.keys.domain)
-        await loginAPI(email, password, domain)
-        showHomeScreen()
-        setIsLoading(false)
-      } catch(error) {
-        Alert.alert('Thông báo', error?.message)
-        setIsLoading(false)
-      }
+  const onTapLogin = async () => {
+    setIsLoading(true)
+    try {
+      let domain = await StorageManager.getData(Constant.keys.domain)
+      await loginAPI(email, password, domain)
+      showHomeScreen()
+      setIsLoading(false)
+    } catch (error) {
+      Alert.alert('Thông báo', error?.message)
+      setIsLoading(false)
     }
+  }
 
-    const goBackOnBoarding = async () => {
-      await StorageManager.setData(Constant.keys.domain, null)
-      navigation.navigate(Constant.nameScreen.OnBoarding)
+  const goBackOnBoarding = async () => {
+    await StorageManager.setData(Constant.keys.domain, null)
+    navigation.navigate(Constant.nameScreen.OnBoarding)
+  }
+
+  useEffect(() => {
+    return () => {
+
     }
+  })
 
   return (
     isLoading ? <Loading /> :
-    <KeyboardAwareScrollView style={styles.container}>
-      <Image
-        source={hospitalLogo}
-        resizeMode='cover'
-        style={styles.image}
-      />
-      <Text style={styles.text}>MDM</Text>
-      <View style={styles.viewInput}>
-        <FormInput
-          label='Email'
-          value={email}
-          error={emailError}
-          onChangeText={(email) => {
-            validateEmail(email, setEmailError);
-            setEmail(email);
-          }}
-          onBlur={() => {
-            if(emailError==="") {
-              setEmailError("");
-            }
-          }}
-          onFocus={() => validateEmail(email, setEmailError)}
-          appendComponent={
-            <View style={{ justifyContent: 'center', marginLeft: -40,}}>
+      <KeyboardAwareScrollView style={styles.container}>
+        <Image
+          source={hospitalLogo}
+          resizeMode='cover'
+          style={styles.image}
+        />
+        <Text style={styles.text}>MDM</Text>
+        <View style={styles.viewInput}>
+          <FormInput
+            label='Email'
+            value={email}
+            error={emailError}
+            onChangeText={(email) => {
+              validateEmail(email, setEmailError);
+              setEmail(email);
+            }}
+            onBlur={() => {
+              if (emailError === "") {
+                setEmailError("");
+              }
+            }}
+            onFocus={() => validateEmail(email, setEmailError)}
+            appendComponent={
+              <View style={{ justifyContent: 'center', marginLeft: -40, }}>
                 <FontAwesome5
-                  name={emailError==="" ? 'check-circle': 'times-circle'}
+                  name={emailError === "" ? 'check-circle' : 'times-circle'}
                   size={20}
-                  color={emailError==="" ? 'green' : 'gray'}
+                  color={emailError === "" ? 'green' : 'gray'}
                 />
-            </View>
-          }
-        />
-        <FormInput
-          label='Password'
-          value={password}
-          error={passwordError}
-          secureTextEntry={!isShowPassword}
-          onChangeText={(password) => {
-            validatePassword(password, setPasswordError);
-            setPassword(password)
-          }}
-          onBlur={() => {
-            if(password==="") {
-              setPasswordError("");
+              </View>
             }
-          }}
-          onFocus={() => validatePassword(password, setPasswordError)}
-          appendComponent={
-            <TouchableOpacity
-              style={{
-                marginLeft: -45,
-                justifyContent: 'center'
-              }}
-              onPress={() => setIsShowPassword(!isShowPassword)}
-            >
-              <FontAwesome5
-                name={isShowPassword ? 'eye' : 'eye-slash'}
-                size={20}
-                color='gray'
-              />
-            </TouchableOpacity>
-          }
-        />
-        
-        <TouchableOpacity
-          style={[
-            styles.login, 
-            {
-              backgroundColor: isValidate ? '#F7AC65' : 'rgba(227, 120, 75, 0.4)'
+          />
+          <FormInput
+            label='Password'
+            value={password}
+            error={passwordError}
+            secureTextEntry={!isShowPassword}
+            onChangeText={(password) => {
+              validatePassword(password, setPasswordError);
+              setPassword(password)
+            }}
+            onBlur={() => {
+              if (password === "") {
+                setPasswordError("");
+              }
+            }}
+            onFocus={() => validatePassword(password, setPasswordError)}
+            appendComponent={
+              <TouchableOpacity
+                style={{
+                  marginLeft: -45,
+                  justifyContent: 'center'
+                }}
+                onPress={() => setIsShowPassword(!isShowPassword)}
+              >
+                <FontAwesome5
+                  name={isShowPassword ? 'eye' : 'eye-slash'}
+                  size={20}
+                  color='gray'
+                />
+              </TouchableOpacity>
             }
-          ]}
-          onPress={onTapLogin}
-          disabled={!isValidate}
-        >
-          <Text style={styles.loginText}>Đăng Nhập</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.login, 
-            {
-              backgroundColor: '#F7AC65'
-            }
-          ]}
-          onPress={goBackOnBoarding}
-        >
-          <Text style={styles.loginText}>Quay lại màn hình bắt đầu</Text>
-        </TouchableOpacity>
-      </View> 
-    </KeyboardAwareScrollView>
+          />
+
+          <TouchableOpacity
+            style={[
+              styles.login,
+              {
+                backgroundColor: isValidate ? '#F7AC65' : 'rgba(227, 120, 75, 0.4)'
+              }
+            ]}
+            onPress={onTapLogin}
+            disabled={!isValidate}
+          >
+            <Text style={styles.loginText}>Đăng Nhập</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.login,
+              {
+                backgroundColor: '#F7AC65'
+              }
+            ]}
+            onPress={goBackOnBoarding}
+          >
+            <Text style={styles.loginText}>Quay lại màn hình bắt đầu</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAwareScrollView>
   )
 }
 
@@ -147,14 +153,14 @@ const styles = StyleSheet.create({
     height: 150,
     justifyContent: 'center',
     borderRadius: 20,
-    alignSelf: 'center', 
+    alignSelf: 'center',
     marginTop: 40,
     borderWidth: 2,
     borderColor: '#FF6C44'
   },
   text: {
     textAlign: 'center',
-    fontSize: 25, 
+    fontSize: 25,
     fontWeight: 'bold',
     color: 'black',
     marginVertical: 30
@@ -170,18 +176,18 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: 'white',
     borderWidth: 1,
-    borderRadius: 30, 
-    marginBottom: 30, 
+    borderRadius: 30,
+    marginBottom: 30,
     paddingHorizontal: 20,
     fontSize: 16
   },
   login: {
-    borderRadius: 30, 
-    marginTop: 30, 
+    borderRadius: 30,
+    marginTop: 30,
     paddingVertical: 18
-  }, 
+  },
   loginText: {
-    textAlign: 'center', 
+    textAlign: 'center',
     fontSize: 16,
     color: 'white',
   },

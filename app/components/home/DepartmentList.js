@@ -2,7 +2,6 @@ import { useNavigation } from '@react-navigation/core'
 import React, { useLayoutEffect, useState, useCallback } from 'react'
 import { useFocusEffect } from '@react-navigation/native'
 import { FlatList, StyleSheet, Alert, View } from 'react-native'
-import APIManager from '../../controller/APIManager'
 import DepartmentItem from './components/DepartmentItem'
 import Loading from '../customs/Loading'
 import StorageManager from '../../controller/StorageManager'
@@ -16,13 +15,6 @@ const DepartmentList = () => {
     const [isLoading, setIsLoading] = useState(true)
 
     const getAllDepartments = async () => {
-        // APIManager.getAllDepartments()
-        //     .then(departments => setDepartments(departments))
-        //     .catch(error => {
-        //         Alert.alert('Thông báo', error?.message)
-        //         setIsLoading(false)
-        //     })
-        //     .finally(() => setIsLoading(false))
         try {
             let domain = await StorageManager.getData(Constant.keys.domain);
             let response = await getAllDepartmentsAPI(domain);

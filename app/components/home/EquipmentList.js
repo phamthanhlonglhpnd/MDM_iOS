@@ -1,7 +1,6 @@
 import { useNavigation, useRoute, StackActions } from '@react-navigation/core'
 import React, { useLayoutEffect, useRef, useState, useEffect } from 'react'
 import { FlatList, StyleSheet, TouchableOpacity, View, Image, Alert } from 'react-native'
-import APIManager from '../../controller/APIManager'
 import EquipmentItem from './components/EquipmentItem'
 import ActionSheet from 'react-native-actionsheet'
 import Constant from '../../controller/Constant'
@@ -56,16 +55,6 @@ const EquipmentList = () => {
     }
 
     const getAllEquipments = async () => {
-        // APIManager.getAllEquipments(keyword)
-        //     .then(equipments => {
-        //         setEquipments(equipments)
-        //         equipmentsRoot.current = equipments
-        //     })
-        //     .catch(error => {
-        //         Alert.alert('Thông báo', error?.message)
-        //         setIsLoading(false)
-        //     })
-        //     .finally(() => setIsLoading(false))
         try {
             let domain = await StorageManager.getData(Constant.keys.domain);
             let response = await getAllEquipmentsAPI(domain, keyword);
