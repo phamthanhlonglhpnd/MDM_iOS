@@ -5,7 +5,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import FormInput from '../customs/FormInput';
 import { validateEmail, validatePassword } from '../../controller/validate';
-import hospitalLogo from '../../assets/images/kienan.jpg';
+import img_logo from '../../assets/images/img_logo.png';
 import Constant from '../../controller/Constant'
 import Loading from '../customs/Loading';
 import StorageManager from '../../controller/StorageManager';
@@ -53,7 +53,7 @@ export default function Login() {
     isLoading ? <Loading /> :
       <KeyboardAwareScrollView style={styles.container}>
         <Image
-          source={hospitalLogo}
+          source={img_logo}
           resizeMode='cover'
           style={styles.image}
         />
@@ -155,8 +155,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignSelf: 'center',
     marginTop: 40,
-    borderWidth: 2,
-    borderColor: '#FF6C44'
   },
   text: {
     textAlign: 'center',

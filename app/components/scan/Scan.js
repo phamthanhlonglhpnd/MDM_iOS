@@ -28,9 +28,9 @@ class Scan extends Component {
         request(PERMISSIONS.IOS.CAMERA)
         .then((result) => {
             if (result === RESULTS.GRANTED) {
-                Alert.alert('Thông báo', "You can use the camera");
+                Alert.alert('Thông báo', "Bạn có thể sử dụng camera trong MDM");
             } else {
-                Alert.alert('Thông báo', "Camera permission denied");
+                Alert.alert('Thông báo', "Quyền truy cập camera của MDM bị từ chối");
             }
         })
         .catch(error => Alert.alert('Thông báo', error))

@@ -1,4 +1,4 @@
-import { useNavigation, useRoute } from '@react-navigation/native'
+import { useNavigation, useRoute, StackActions } from '@react-navigation/native'
 import React, { useState, useEffect } from 'react'
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { ScrollView, TextInput } from 'react-native-gesture-handler'
@@ -15,7 +15,8 @@ const EquipmentInventoryInput = () => {
     const equipmentName = route.params?.name || route.params?.title
     const equipmentModel = route.params?.model ?? ''
     const equipmentSerial = route.params?.serial ?? ''
-    const [note, setNote] = useState('')
+    const equipmentStatus = route.params?.status ?? ''
+    const [note, setNote] = useState(equipmentStatus === 'liquidated' ? 'Thiết bị đã được thanh lý' : '')
     const [isLoading, setIsLoading] = useState(false)
     const navigation = useNavigation()
 
@@ -35,7 +36,10 @@ const EquipmentInventoryInput = () => {
             'Vui lòng xem chi tiết ở mục lịch sử kiểm kê của thiết bị!'
         )
         setNote("");
-        navigation.navigate(Constant.nameScreen.EquipmentDetails, { equipmentId });
+    
+        navigation.dispatch(
+            StackActions.push(Constant.nameScreen.EquipmentDetails, { equipmentId })
+        )
     }
 
     const onFailed = () => {
@@ -75,39 +79,52 @@ const EquipmentInventoryInput = () => {
 
     return (
         isLoading ? <Loading /> :
-        <View style={styles.rootView}>
-            <ScrollView>
-                <Text style={styles.name}>
-                    {equipmentName}
-                </Text>
-                <View 
-                    style={{
-                        marginHorizontal: 20,
-                        marginTop: 10
-                    }}
-                >
-                    <Text style={{color: Constant.color.text}}><Text style={{fontWeight: 'bold', textAlign: 'center'}}>Model: </Text>{equipmentModel}</Text>
-                    <Text style={{color: Constant.color.text}}><Text style={{fontWeight: 'bold', textAlign: 'center'}}>Serial: </Text>{equipmentSerial}</Text>
-                </View>
-                <View style={styles.noteView}>
-                    <TextInput
-                        style={styles.noteInput}
-                        value={note}
-                        multiline
-                        onChangeText={text => setNote(text)}
-                        placeholder='Nhập ghi chú kiểm kê tại đây...'
-                    />
-                </View>
-
-                <TouchableOpacity
-                    onPress={requestInventory}
-                    style={styles.requestTouch}>
-                    <Text style={styles.requestText}>
-                        Kiểm kê
+            <View style={styles.rootView}>
+                <ScrollView>
+                    <Text style={styles.name}>
+                        {equipmentName}
                     </Text>
-                </TouchableOpacity>
-            </ScrollView>
-        </View>
+                    <View style={styles.number}>
+                        <View style={styles.detail}>
+                            <Text style={styles.title}>Model</Text>
+                            <Text style={styles.value}>{equipmentModel}</Text>
+
+                        </View>
+                        <View style={styles.detail}>
+                            <Text style={styles.title}>Serial</Text>
+                            <Text style={styles.value}>{equipmentSerial}</Text>
+                        </View>
+                    </View>
+                    {
+                        equipmentStatus !== 'liquidated' ?
+                            <View style={styles.noteView}>
+                                <TextInput
+                                    style={styles.noteInput}
+                                    value={note}
+                                    multiline
+                                    onChangeText={text => setNote(text)}
+                                    placeholder='Nhập ghi chú kiểm kê tại đây...'
+                                />
+                            </View> :
+                            <View style={styles.liquidatedView}>
+                                <Text>Ghi chú tự động</Text>
+                                <TextInput
+                                    style={styles.liquidatedInput}
+                                    multiline
+                                    value={note}
+                                />
+                            </View>
+                    }
+
+                    <TouchableOpacity
+                        onPress={requestInventory}
+                        style={styles.requestTouch}>
+                        <Text style={styles.requestText}>
+                            Kiểm kê
+                        </Text>
+                    </TouchableOpacity>
+                </ScrollView>
+            </View>
     )
 }
 
@@ -129,7 +146,8 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: 'center',
         marginTop: 20,
-        color: Constant.color.text
+        color: Constant.color.text,
+        fontWeight: 'bold'
     },
     noteTitle: {
         marginTop: 10
@@ -154,5 +172,35 @@ const styles = StyleSheet.create({
         borderRadius: 22,
         alignSelf: 'center',
         marginTop: 30,
+    },
+    liquidatedView: {
+        marginTop: 30
+    },
+    liquidatedInput: {
+        backgroundColor: '#E1E1E5',
+        marginTop: 5,
+        borderRadius: 8,
+        height: 30,
+        paddingHorizontal: 10
+    },
+    number: {
+        backgroundColor: '#FFF4EB',
+        paddingHorizontal: 15,
+        paddingVertical: 15,
+        borderRadius: 20,
+        marginVertical: 10
+    },
+    title: {
+        marginBottom: 8,
+        color: Constant.color.text
+    },
+    value: {
+        fontSize: 16,
+        color: '#323E6D',
+        fontWeight: 'bold'
+    },
+    detail: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
 })

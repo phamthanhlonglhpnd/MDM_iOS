@@ -136,7 +136,7 @@ export default class APIManager {
 
     static async requestError(id, reason) {
         try {
-            const date_failure = format(new Date(), 'hh:mm dd-MM-yyyy')
+            const date_failure = format(new Date(), 'dd-MM-yyyy')
             const info = {
                 date_failure,
                 reason

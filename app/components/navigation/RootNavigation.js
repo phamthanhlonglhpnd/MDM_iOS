@@ -21,6 +21,8 @@ import EquipmentInventoryInput from '../home/EquipmentInventoryInput';
 import OnBoarding from '../authentication/OnBoarding';
 import Scan from '../scan/Scan';
 import Equipment_Department from '../home/Equipment_Department';
+import EquipmentInventoryResult from '../home/EquipmentInventoryResult';
+import EquipmentErrorResult from '../home/EquipmentErrorResult';
 
 const Stack = createNativeStackNavigator();
 
@@ -109,6 +111,13 @@ const RootNavigation = () => {
                             }}
                         />
                         <Stack.Screen
+                            name={Constant.nameScreen.EquipmentErrorResult}
+                            component={EquipmentErrorResult}
+                            options={{
+                                title: 'Báo hỏng'
+                            }}
+                        />
+                        <Stack.Screen
                             name={Constant.nameScreen.Scan}
                             component={Scan}
                             options={{
@@ -139,6 +148,13 @@ const RootNavigation = () => {
                         <Stack.Screen
                             name={Constant.nameScreen.EquipmentInventoryInput}
                             component={EquipmentInventoryInput}
+                            options={{
+                                title: 'Kiểm kê'
+                            }}
+                        />
+                        <Stack.Screen
+                            name={Constant.nameScreen.EquipmentInventoryResult}
+                            component={EquipmentInventoryResult}
                             options={{
                                 title: 'Kiểm kê'
                             }}

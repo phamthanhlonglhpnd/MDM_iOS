@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View, Image, FlatList, Alert } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, Image, FlatList, Alert, LogBox } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Constant from '../../controller/Constant'
 import Loading from '../customs/Loading'
@@ -17,7 +17,11 @@ const EquipmentDetails = () => {
     const [equipment, setEquipment] = useState();
     const [historyInventory, setHistoryInventory] = useState([]);
     const [isActive, setIsActive] = useState(false);
-    const [isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
+    }, [])
 
     const onRequestError = () => {
         navigation.dispatch(
@@ -27,7 +31,7 @@ const EquipmentDetails = () => {
 
     const onRequestInventory = () => {
         navigation.dispatch(
-            StackActions.push(Constant.nameScreen.EquipmentInventoryInput, { id: equipmentId, name: equipment?.title, model: equipment?.model, serial: equipment?.serial })
+            StackActions.push(Constant.nameScreen.EquipmentInventoryInput, { id: equipmentId, name: equipment?.title, model: equipment?.model, serial: equipment?.serial, status: equipment?.status })
         )
     }
 
@@ -38,7 +42,7 @@ const EquipmentDetails = () => {
         try {
             let domain = await StorageManager.getData(Constant.keys.domain);
             let response = await getAEquipmentAPI(domain, equipmentId);
-            if(response?.status === "active") {
+            if (response?.status === "active") {
                 setIsActive(true);
             }
             setEquipment(response);
@@ -86,18 +90,18 @@ const EquipmentDetails = () => {
     const getStatusStyle = (status) => {
         let statusStyle = {
             backgroundColor: 'black',
-            statusColor:  'white'
+            statusColor: 'white'
         }
-        
-        if(status === 'not_handed' || status === 'active') {
+
+        if (status === 'not_handed' || status === 'active') {
             statusStyle.backgroundColor = '#E8FFF5';
             statusStyle.statusColor = '#A0E4C6';
         }
-        if(status === 'was_broken' || status === 'corrected') {
+        if (status === 'was_broken' || status === 'corrected') {
             statusStyle.backgroundColor = '#FFEDEE';
             statusStyle.statusColor = '#FB7C7C';
         }
-        if(status === 'inactive' || status === 'liquidated') {
+        if (status === 'inactive' || status === 'liquidated') {
             statusStyle.backgroundColor = '#B7C0D7';
             statusStyle.statusColor = 'gray';
         }
@@ -106,115 +110,139 @@ const EquipmentDetails = () => {
 
     return (
         isLoading ? <Loading /> :
-        <KeyboardAwareScrollView style={styles.rootView}>
-            <View style={styles.top}>
-                {
-                    equipment?.urlImg ?
-                    <FastImage
-                        source={{ uri: equipment?.urlImg }}
-                        style={styles.image}
-                        resizeMode='cover'
-                    /> :
-                    <Image 
-                        source={logo}
-                        style={styles.image}
-                    />
-                }
-                <Text style={styles.name}>
-                    {equipment?.title}
-                </Text>
-                <View style={[
-                    styles.boxStatus,
+            <KeyboardAwareScrollView style={styles.rootView}>
+                <View style={styles.top}>
                     {
-                        backgroundColor: `${getStatusStyle(equipment?.status).backgroundColor}`,
+                        equipment?.urlImg ?
+                            <FastImage
+                                source={{ uri: equipment?.urlImg }}
+                                style={styles.image}
+                                resizeMode='cover'
+                            /> :
+                            <Image
+                                source={logo}
+                                style={styles.image}
+                            />
                     }
-                ]}>
-                    <Text style={
-                        [
-                            styles.status,
-                            {
-                                color: `${getStatusStyle(equipment?.status).statusColor}`
-                            }
-                        ]
-                    }>{getStatus()}</Text>
+                    <Text style={styles.name}>
+                        {equipment?.title}
+                    </Text>
+                    <View style={[
+                        styles.boxStatus,
+                        {
+                            backgroundColor: `${getStatusStyle(equipment?.status).backgroundColor}`,
+                        }
+                    ]}>
+                        <Text style={
+                            [
+                                styles.status,
+                                {
+                                    color: `${getStatusStyle(equipment?.status).statusColor}`
+                                }
+                            ]
+                        }>{getStatus()}</Text>
+                    </View>
+                    <View style={styles.number}>
+                        <View style={styles.detail}>
+                            <Text style={styles.title}>Model</Text>
+                            <Text style={styles.value}>{equipment?.model}</Text>
+
+                        </View>
+                        <View style={styles.detail}>
+                            <Text style={styles.title}>Serial</Text>
+                            <Text style={styles.value}>{equipment?.serial}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.year}>
+                        <View style={styles.detail}>
+                            <Text style={styles.title}>Năm sản xuất</Text>
+                            <Text style={styles.value}>{equipment?.year_manufacture}</Text>
+                        </View>
+                        <View style={styles.detail}>
+                            <Text style={styles.title}>Năm sử dụng</Text>
+                            <Text style={styles.value}>{equipment?.year_use}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.origin}>
+                        <View style={styles.detail}>
+                            <Text style={styles.title}>Hãng sản xuất</Text>
+                            <Text style={styles.value}>{equipment?.manufacturer}</Text>
+                        </View>
+                        <View style={styles.detail}>
+                            <Text style={styles.title}>Xuất xứ</Text>
+                            <Text style={styles.value}>{equipment?.origin}</Text>
+                        </View>
+                    </View>
                 </View>
-                <View style={styles.number}>
-                    <View>
-                        <Text style={styles.title}>Model</Text>
-                        <Text style={styles.value}>{equipment?.model}</Text>
-                    </View>
-                    <View>
-                        <Text style={styles.title}>Serial</Text>
-                        <Text style={styles.value}>{equipment?.serial}</Text>
-                    </View>
-                </View>
-                <View style={styles.year}>
-                    <View>
-                        <Text style={styles.title}>Năm sản xuất</Text>
-                        <Text style={styles.value}>{equipment?.year_manufacture}</Text>   
-                    </View>
-                    <View>
-                        <Text style={styles.title}>Năm sử dụng</Text>
-                        <Text style={styles.value}>{equipment?.year_use}</Text>
-                    </View>
-                </View>
-                <View style={styles.origin}>
-                    <View>
-                        <Text style={styles.title}>Hãng sản xuất</Text>
-                        <Text style={styles.value}>{equipment?.manufacturer}</Text>
-                    </View>
-                    <View>
-                        <Text style={styles.title}>Xuất xứ</Text>
-                        <Text style={styles.value}>{equipment?.origin}</Text>
-                    </View>
-                </View>
-            </View>
-            <View style={styles.history}>
-                <Text style={styles.historyTitle}>Lịch sử kiểm kê thiết bị</Text>
                 {
-                    historyInventory.length > 0 ?
-                        <FlatList 
-                            data={historyInventory}
-                            renderItem={({ item }) => {
-                                return (
-                                    <View style={styles.historyInventoryItem}>
-                                        <View>
-                                            <Text style={styles.title}>Ghi chú</Text>
-                                            <Text style={styles.value}>{item?.note}</Text>
-                                        </View>
-                                        <View>
-                                            <Text style={styles.title}>Thời gian</Text>
-                                            <Text style={styles.value}>{item?.date}</Text>
-                                        </View>
-                                    </View>
-                                )
-                            }}
-                            keyExtractor={(item) => item?.id}
-                        />
-                     :
-                    <Text>Thiết bị chưa được kiểm kê</Text>
-                    
+                    equipment?.reason ?
+                        <View style={styles.history}>
+                            <Text style={styles.historyTitle}>Lịch sử báo hỏng thiết bị</Text>
+                            <View style={styles.historyInventoryItem}>
+                                <View style={styles.detail}>
+                                    <Text style={styles.title}>Lí do</Text>
+                                    <Text style={styles.value}>{equipment?.reason}</Text>
+                                </View>
+                                <View style={styles.detail}>
+                                    <Text style={styles.title}>Thời gian</Text>
+                                    <Text style={styles.value}>{equipment?.date_failure}</Text>
+                                </View>
+                            </View>
+                        </View> : <View />
                 }
-            </View>
-            {
-                isActive ? 
-                <View style={styles.button}>
-                    <TouchableOpacity 
-                        onPress={onRequestError}
-                        style={styles.bell}
-                    >
-                        <Text style={styles.text}>Báo hỏng</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                        onPress={onRequestInventory}
-                        style={styles.bell}
-                    >
-                        <Text style={styles.text}>Kiểm kê</Text>
-                    </TouchableOpacity>
+                <View style={styles.history}>
+                    <Text style={styles.historyTitle}>Lịch sử kiểm kê thiết bị</Text>
+                    {
+                        historyInventory.length > 0 ?
+                            <FlatList
+                                data={historyInventory}
+                                renderItem={({ item }) => {
+                                    return (
+                                        <View style={styles.historyInventoryItem}>
+                                            <View style={styles.detail}>
+                                                <Text style={styles.title}>Ghi chú</Text>
+                                                <Text style={styles.value}>{item?.note}</Text>
+                                            </View>
+                                            <View style={styles.detail}>
+                                                <Text style={styles.title}>Thời gian</Text>
+                                                <Text style={styles.value}>{item?.date}</Text>
+                                            </View>
+                                        </View>
+                                    )
+                                }}
+                                keyExtractor={(item) => item?.id}
+                            />
+                            :
+                            <Text>Thiết bị chưa được kiểm kê</Text>
+
+                    }
                 </View>
-                : <View/>
-            }
-        </KeyboardAwareScrollView>
+                {
+                    isActive ?
+                        <View style={styles.button}>
+                            <TouchableOpacity
+                                onPress={onRequestError}
+                                style={styles.bell}
+                            >
+                                <Text style={styles.text}>Báo hỏng</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={onRequestInventory}
+                                style={styles.bell}
+                            >
+                                <Text style={styles.text}>Kiểm kê</Text>
+                            </TouchableOpacity>
+                        </View>
+                        :
+
+                        <TouchableOpacity
+                            onPress={onRequestInventory}
+                            style={styles.bellPlus}
+                        >
+                            <Text style={styles.text}>Kiểm kê</Text>
+                        </TouchableOpacity>
+                }
+            </KeyboardAwareScrollView>
     )
 }
 
@@ -235,9 +263,11 @@ const styles = StyleSheet.create({
     },
     image: {
         width: 110,
-        height: 110, 
+        height: 110,
         borderRadius: 50,
-        marginHorizontal: ( Constant.screen.width - 110 ) / 2 - 110/4,
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
         marginVertical: 25
     },
     title: {
@@ -249,6 +279,10 @@ const styles = StyleSheet.create({
         color: '#323E6D',
         fontWeight: 'bold'
     },
+    detail: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
     name: {
         color: Constant.color.text,
         fontSize: 20,
@@ -256,12 +290,12 @@ const styles = StyleSheet.create({
         marginBottom: 8,
         alignSelf: 'center',
         textAlign: 'center'
-    }, 
+    },
     button: {
         display: 'flex',
         flexDirection: 'row',
         flex: 1,
-        marginHorizontal: ( Constant.screen.width - 300 ) / 2,
+        marginHorizontal: (Constant.screen.width - 300) / 2,
         justifyContent: 'space-around'
     },
     bell: {
@@ -271,6 +305,18 @@ const styles = StyleSheet.create({
         marginVertical: 20,
         position: 'relative',
         borderRadius: 40
+    },
+    bellPlus: {
+        height: 50,
+        backgroundColor: '#FFDE73',
+        width: 120,
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        borderRadius: 40,
+        marginTop: 5,
+        marginBottom: 20,
+        overflow: 'hidden'
     },
     text: {
         textAlign: 'center',
@@ -282,7 +328,9 @@ const styles = StyleSheet.create({
         width: 135,
         paddingVertical: 8,
         marginVertical: 10,
-        marginHorizontal: ( Constant.screen.width - 125 ) / 2 - 125 / 4
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
     },
     status: {
         fontWeight: 'bold',
@@ -290,9 +338,6 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     number: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
         backgroundColor: '#FFF4EB',
         paddingHorizontal: 15,
         paddingVertical: 15,
@@ -300,9 +345,6 @@ const styles = StyleSheet.create({
         marginVertical: 10
     },
     year: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
         backgroundColor: '#E9EAFF',
         paddingHorizontal: 15,
         paddingVertical: 15,
@@ -310,9 +352,6 @@ const styles = StyleSheet.create({
         marginVertical: 10
     },
     origin: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
         backgroundColor: '#FFEDEE',
         paddingHorizontal: 15,
         paddingVertical: 15,
@@ -334,9 +373,6 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         paddingHorizontal: 15,
         paddingVertical: 15,
-        flex: 1,
-        justifyContent: 'space-between',
-        flexDirection: 'row',
         marginBottom: 12
     },
 })

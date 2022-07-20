@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ImageBackground, Image, TouchableOpacity, FlatList, LogBox } from 'react-native'
+import { View, Text, StyleSheet, ImageBackground, Image, TouchableOpacity, LogBox } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import backgroundOnBoarding from '../../assets/images/backgroundOnBoarding.png';
 import FormInput from '../customs/FormInput';
@@ -12,26 +12,18 @@ import { validateDomain } from '../../controller/validate';
 export default function OnBoarding({ navigation }) {
     const [domain, setDomain] = useState('');
     const [domainError, setDomainError] = useState('');
-    const [isShowDomains, setIsShowDomains] = useState(false);
     const isValidate = domain !== '' && domainError === '';
     const isMounted = useRef(true);
 
     const gotoLogin = async () => {
         await StorageManager.setData(Constant.keys.domain, domain.toLowerCase());
         setDomain('');
-        setIsShowDomains(false);
         navigation.navigate(Constant.nameScreen.Login);
     }
 
     const fillDomain = (domain) => {
         validateDomain(domain, setDomainError);
         setDomain(domain);
-        setIsShowDomains(true);
-    }
-
-    const selectDomain = (domain) => {
-        setDomain(domain);
-        setIsShowDomains(false);
     }
 
     const checkDomainError = () => {
@@ -40,26 +32,7 @@ export default function OnBoarding({ navigation }) {
         }
     }
 
-    useEffect(() => {
-        LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
-        return () => {
-            
-        }
-    }, [])
-
     useEffect(() => () => { isMounted.current = false }, [])
-
-    const renderItem = ({ item }) => {
-        return (
-            <TouchableOpacity
-                style={styles.domain}
-                onPress={() => selectDomain(item?.value)}
-            >
-                <Text>{item?.value}</Text>
-            </TouchableOpacity>
-        )
-    }
-
 
     return (
         <KeyboardAwareScrollView style={styles.container}>
@@ -81,7 +54,6 @@ export default function OnBoarding({ navigation }) {
                         value={domain}
                         onChangeText={(domain) => fillDomain(domain)}
                         onBlur={checkDomainError}
-                        onFocus={() => setIsShowDomains(true)}
                         appendComponent={
                             <View style={{ justifyContent: 'center', marginLeft: -40, }}>
                                 <FontAwesome5
@@ -93,16 +65,6 @@ export default function OnBoarding({ navigation }) {
                         }
                     />
                 </View>
-                {
-                    isShowDomains ?
-                        <View style={styles.domains}>
-                            <FlatList
-                                data={Constant.domains}
-                                renderItem={renderItem}
-                                keyExtractor={(item) => item?.id}
-                            />
-                        </View> : <View />
-                }
             </View>
             <TouchableOpacity
                 style={[

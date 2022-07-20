@@ -78,39 +78,41 @@ const ErrorInfoInput = () => {
 
     return (
         isLoading ? <Loading /> :
-        <View style={styles.rootView}>
-            <ScrollView>
-                <Text style={styles.name}>
-                    {equipmentName}
-                </Text>
-                <View 
-                    style={{
-                        marginHorizontal: 20,
-                        marginTop: 10
-                    }}
-                >
-                    <Text style={{color: Constant.color.text}}><Text style={{fontWeight: 'bold', textAlign: 'center'}}>Model: </Text>{equipmentModel}</Text>
-                    <Text style={{color: Constant.color.text}}><Text style={{fontWeight: 'bold', textAlign: 'center'}}>Serial: </Text>{equipmentSerial}</Text>
-                </View>
-                <View style={styles.reasonView}>
-                    <TextInput
-                        style={styles.reasonInput}
-                        value={reason}
-                        multiline
-                        onChangeText={text => setReason(text)}
-                        placeholder='Nhập lý do hỏng tại đây...'
-                    />
-                </View>
-
-                <TouchableOpacity
-                    onPress={requestError}
-                    style={styles.requestTouch}>
-                    <Text style={styles.requestText}>
-                        Báo hỏng
+            <View style={styles.rootView}>
+                <ScrollView>
+                    <Text style={styles.name}>
+                        {equipmentName}
                     </Text>
-                </TouchableOpacity>
-            </ScrollView>
-        </View>
+                    <View style={styles.number}>
+                        <View style={styles.detail}>
+                            <Text style={styles.title}>Model</Text>
+                            <Text style={styles.value}>{equipmentModel}</Text>
+
+                        </View>
+                        <View style={styles.detail}>
+                            <Text style={styles.title}>Serial</Text>
+                            <Text style={styles.value}>{equipmentSerial}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.reasonView}>
+                        <TextInput
+                            style={styles.reasonInput}
+                            value={reason}
+                            multiline
+                            onChangeText={text => setReason(text)}
+                            placeholder='Nhập lý do hỏng tại đây...'
+                        />
+                    </View>
+
+                    <TouchableOpacity
+                        onPress={requestError}
+                        style={styles.requestTouch}>
+                        <Text style={styles.requestText}>
+                            Báo hỏng
+                        </Text>
+                    </TouchableOpacity>
+                </ScrollView>
+            </View>
     )
 }
 
@@ -132,7 +134,8 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: 'center',
         marginTop: 20,
-        color: Constant.color.text
+        color: Constant.color.text,
+        fontWeight: 'bold'
     },
     reasonTitle: {
         marginTop: 10
@@ -157,5 +160,25 @@ const styles = StyleSheet.create({
         borderRadius: 22,
         alignSelf: 'center',
         marginTop: 30,
+    },
+    number: {
+        backgroundColor: '#FFF4EB',
+        paddingHorizontal: 15,
+        paddingVertical: 15,
+        borderRadius: 20,
+        marginVertical: 10
+    },
+    title: {
+        marginBottom: 8,
+        color: Constant.color.text
+    },
+    value: {
+        fontSize: 16,
+        color: '#323E6D',
+        fontWeight: 'bold'
+    },
+    detail: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
 })

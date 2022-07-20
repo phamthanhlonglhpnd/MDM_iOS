@@ -1,27 +1,22 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, FlatList } from 'react-native'
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, Alert } from 'react-native'
 import Constant from '../../controller/Constant'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { StackActions, useNavigation } from '@react-navigation/native'
-import EquipmentItem from './components/EquipmentItem'
-import Loading from '../customs/Loading'
 import { getAllEquipmentsAPI } from '../../controller/APIService'
 import StorageManager from '../../controller/StorageManager'
 
 const ErrorRequest = () => {
 
     const navigation = useNavigation()
-    const [equipments, setEquipments] = useState([]);
     const [keyword, setKeyword] = useState('');
     const [isRemind, setIsRemind] = useState(true);
-    const [isLoading, setIsLoading] = useState(false)
 
     const onSearch = async () => {
         if (keyword === '') {
             Alert.alert('Thông báo', 'Vui lòng nhập thông tin để tìm kiếm!')
             return
         }
-        setIsLoading(true)
         try {
             let domain = await StorageManager.getData(Constant.keys.domain);
             let response = await getAllEquipmentsAPI(domain, keyword);
@@ -34,15 +29,17 @@ const ErrorRequest = () => {
             })
             if(newEquipments.length === 0) {
                 setIsRemind(true)
+            } else {
+                navigation.dispatch(
+                    StackActions.push(Constant.nameScreen.EquipmentErrorResult, { newEquipments })
+                );
+                
             }
-            setEquipments(newEquipments);
             setIsRemind(false);
             setKeyword("");    
-            setIsLoading(false);
         } catch (error) {
             Alert.alert('Thông báo', error?.message);
             setKeyword("");
-            setIsLoading(false);
         }
     }
 
@@ -52,25 +49,7 @@ const ErrorRequest = () => {
         )
     }
 
-    const requestError = (id, title, model, serial) => {
-        navigation.dispatch(
-            StackActions.push(Constant.nameScreen.ErrorInfoInput, { id, title, model, serial })
-        )
-    }
-
-    const renderItem = ({ item }) => {
-        return (
-            <EquipmentItem 
-                item={item} 
-                key={item.id}
-                onPress={() => requestError(item?.id, item?.title, item?.model, item?.serial)} 
-            />
-        )
-    }
-
     return (
-        isLoading ? <Loading /> :
-        equipments.length === 0 ? 
         <View style={styles.container}>
             <Text style={styles.title}>
                 Nhập để tìm thiết bị cần báo hỏng
@@ -81,6 +60,7 @@ const ErrorRequest = () => {
                     style={styles.equipmentInput}
                     value={keyword}
                     onChangeText={keyword => setKeyword(keyword)}
+                    onFocus={() => setIsRemind(true)}
                 />
             </View>
             {
@@ -108,27 +88,7 @@ const ErrorRequest = () => {
                     style={styles.qrCodeIcon}
                 />
             </TouchableOpacity>
-        </View> : 
-        <View style={{ flex: 1}}>
-            <Text 
-                style={[
-                    styles.title,
-                    {
-                        marginBottom: 10
-                    }
-                ]}
-            >
-                Chọn thiết bị cần báo hỏng
-            </Text>
-            <FlatList
-                data={equipments}
-                renderItem={renderItem}
-                keyExtractor={(item) => item?.id}
-                contentContainerStyle={{
-                    paddingTop: 12
-                }}
-            />
-        </View>
+        </View> 
     )
 }
 

@@ -1,6 +1,6 @@
 import { useNavigation, StackActions } from '@react-navigation/core'
 import React, { useState, useEffect } from 'react'
-import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { Image, StyleSheet, Text, View, TouchableOpacity, SafeAreaView } from 'react-native'
 import AppManager from '../../controller/AppManager'
 import Constant from '../../controller/Constant'
 import StorageManager from '../../controller/StorageManager'
@@ -47,7 +47,7 @@ const Profile = () => {
             <KeyboardAwareScrollView
                 style={styles.container}
             >
-                <View style={styles.top}>
+                <View>
                     <Text style={{
                         fontSize: 16,
                         fontWeight: 'bold',
@@ -165,11 +165,8 @@ const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 20,
         paddingVertical: 20,
-    },
-    top: {
-        // flexDirection: 'row',
-        // alignItems: 'center',
-        // justifyContent: 'space-between'
+        flex: 1,
+        marginTop: 40
     },
     middle: {
         backgroundColor: "#DDDDDD",

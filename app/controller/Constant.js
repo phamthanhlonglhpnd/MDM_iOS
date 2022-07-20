@@ -1,9 +1,6 @@
 import { Dimensions } from 'react-native'
 
 export default {
-    baseURL: "http://bv.qltbyt.com/api/v1",
-    imageBaseURL: 'http://bv.qltbyt.com/uploads',
-    onesignalKey: "",
     color: {
         main: '#2A238E',
         mainBG: '#ffd9f9',
@@ -62,7 +59,8 @@ export default {
         NotificationList: 'NotificationList',
         Scan: 'Scan',
         Equipment_Department: 'Danh sách thiết bị',
-
+        EquipmentInventoryResult: 'Danh sách tìm kiếm thiết bị cần kiểm kê',
+        EquipmentErrorResult: 'Danh sách tìm kiếm thiết bị cần báo hỏng'
     },
     dateFormat: {
         default: 'dd-MM-yyyy',
@@ -119,44 +117,6 @@ export default {
             screen: 'EquipmentInventory'
         }
     ],
-    staffData: [
-        {
-            name: 'Nguyễn Văn A',
-            phone: '0394827622',
-            email: 'aaaaaa@gmail.com',
-            type: 'Admin'
-        },
-        {
-            name: 'Phạm B',
-            phone: '039482888',
-            email: 'nnnnn@gmail.com',
-            type: 'Tester'
-        },
-        {
-            name: 'Lê Công C',
-            phone: '099999999',
-            email: 'iiiiiiii@gmail.com',
-            type: 'Admin'
-        },
-        {
-            name: 'Nguyễn Ngọc D',
-            phone: '0888888888',
-            email: 'eeeeeeee@gmail.com',
-            type: 'NVKP'
-        },
-        {
-            name: 'Trần Ánh E',
-            phone: '0777777777',
-            email: 'uuuuuuuuu@gmail.com',
-            type: 'Doctor'
-        },
-        {
-            name: 'Cao Thị G',
-            phone: '0555555555',
-            email: 'wwwwww@gmail.com',
-            type: 'Nurse'
-        }
-    ],
     equipmentStatus: [
         {
             key: 'not_handed',
@@ -187,16 +147,6 @@ export default {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
     },
-    // domains: [
-    //     "http://bv.qltbyt.com",
-    //     "http://bvkienanhp.qltbyt.com",
-    //     "http://bvdemo.qltbyt.com",
-    //     "http://bvcuchi.qltbyt.com",
-    //     "http://bme.qltbyt.com",
-    //     "http://bvnhihp.qltbyt.com",
-    //     "http://bvdakhoatinhthaibinh.qltbyt.com",
-    //     "http://bvungbuou.qltbyt.com",
-    // ]
     domains: [
         {
             id: 1,

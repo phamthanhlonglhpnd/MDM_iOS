@@ -3,18 +3,13 @@ import { StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, FlatList } 
 import Constant from '../../controller/Constant'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { StackActions, useNavigation } from '@react-navigation/native'
-import EquipmentItem from './components/EquipmentItem'
-import Loading from '../customs/Loading'
 import StorageManager from '../../controller/StorageManager'
 import { getAllEquipmentsAPI } from '../../controller/APIService'
 
 const EquipmentInventory = () => {
 
     const navigation = useNavigation()
-    const [equipments, setEquipments] = useState([]);
     const [keyword, setKeyword] = useState('');
-    const [isRemind, setIsRemind] = useState(true);
-    const [isLoading, setIsLoading] = useState(false)
 
     const onSearch = async () => {
         if (keyword === '') {
@@ -23,25 +18,14 @@ const EquipmentInventory = () => {
         }
         try {
             let domain = await StorageManager.getData(Constant.keys.domain);
-            let response = await getAllEquipmentsAPI(domain, keyword);
-            let newEquipments = [];
-            response.map(equipment => {
-                if(equipment.status === "active") {
-                    newEquipments.push(equipment);
-                }
-                return newEquipments;
-            })
-            if(newEquipments.length === 0) {
-                setIsRemind(true)
-            }
-            setEquipments(newEquipments);
-            setIsRemind(false);
+            let equipments = await getAllEquipmentsAPI(domain, keyword);
+            navigation.dispatch(
+                StackActions.push(Constant.nameScreen.EquipmentInventoryResult, { equipments })
+            )
             setKeyword("");    
-            setIsLoading(false);
         } catch (error) {
             Alert.alert('Thông báo', error?.message);
             setKeyword("");
-            setIsLoading(false);
         }
     }
 
@@ -51,25 +35,7 @@ const EquipmentInventory = () => {
         )
     }
 
-    const requestInventory = (id, title, model, serial) => {
-        navigation.dispatch(
-            StackActions.push(Constant.nameScreen.EquipmentInventoryInput, { id, title, model, serial })
-        )
-    }
-
-    const renderItem = ({ item }) => {
-        return (
-            <EquipmentItem 
-                item={item} 
-                key={item.id}
-                onPress={() => requestInventory(item?.id, item?.title, item?.model, item?.serial)} 
-            />
-        )
-    }
-
     return (
-        isLoading ? <Loading /> :
-        equipments.length === 0 ? 
         <View style={styles.container}>
             <Text style={styles.title}>
                 Nhập để tìm thiết bị cần kiểm kê
@@ -82,12 +48,6 @@ const EquipmentInventory = () => {
                     onChangeText={keyword => setKeyword(keyword)}
                 />
             </View>
-            {
-                isRemind ? <View/> :
-                <View style={{marginTop: 15}}>
-                    <Text style={{color: 'red', textAlign: 'center'}}>Vui lòng nhập thiết bị có trạng thái đang sử dụng</Text>
-                </View>
-            }
             <TouchableOpacity
                 onPress={onSearch}
                 style={styles.searchTouch}>
@@ -107,27 +67,8 @@ const EquipmentInventory = () => {
                     style={styles.qrCodeIcon}
                 />
             </TouchableOpacity>
-        </View> : 
-        <View style={{ flex: 1}}>
-            <Text 
-                style={[
-                    styles.title,
-                    {
-                        marginBottom: 10
-                    }
-                ]}
-            >
-                Chọn thiết bị cần kiểm kê
-            </Text>
-            <FlatList
-                data={equipments}
-                renderItem={renderItem}
-                keyExtractor={(item) => item?.id}
-                contentContainerStyle={{
-                    paddingTop: 12
-                }}
-            />
-        </View>
+        </View> 
+        
     )
 }
 
