@@ -141,7 +141,6 @@ class Scan extends Component {
 const styles = StyleSheet.create({
     scrollViewStyle: {
         flex: 1,
-        // justifyContent: 'flex-start',
         backgroundColor: '#2196f3'
     },
     header: {

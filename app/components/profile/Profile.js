@@ -47,16 +47,6 @@ const Profile = () => {
             <KeyboardAwareScrollView
                 style={styles.container}
             >
-                <View>
-                    <Text style={{
-                        fontSize: 16,
-                        fontWeight: 'bold',
-                        color: 'black',
-                        textAlign: 'center'
-                    }}>
-                        Thông tin cá nhân
-                    </Text>
-                </View>
                 <Image
                     style={styles.image}
                     source={{
@@ -164,9 +154,7 @@ export default Profile
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 20,
-        paddingVertical: 20,
         flex: 1,
-        marginTop: 40
     },
     middle: {
         backgroundColor: "#DDDDDD",

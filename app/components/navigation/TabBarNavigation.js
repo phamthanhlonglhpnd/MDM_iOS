@@ -10,6 +10,7 @@ import Scan from '../scan/Scan';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectCount } from '../../store/slice/appSlice';
 import { resetCount } from '../../store/slice/appSlice'
+import Scan2 from '../scan/Scan2';
 
 const Tab = createBottomTabNavigator();
 
@@ -76,14 +77,11 @@ const TabBarNavigation = () => {
             />
             <Tab.Screen
                 name={Constant.nameScreen.Scan}
-                component={Scan}
+                component={Scan2}
             />
             <Tab.Screen
                 name={Constant.nameScreen.Profile}
                 component={Profile}
-                options={{
-                    headerShown: false
-                }}
             />
         </Tab.Navigator>
     )
