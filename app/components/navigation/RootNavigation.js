@@ -23,6 +23,7 @@ import Scan from '../scan/Scan';
 import Equipment_Department from '../home/Equipment_Department';
 import EquipmentInventoryResult from '../home/EquipmentInventoryResult';
 import EquipmentErrorResult from '../home/EquipmentErrorResult';
+import StatisticalEquipment from '../home/StatisticalEquipment';
 
 const Stack = createNativeStackNavigator();
 
@@ -139,10 +140,10 @@ const RootNavigation = () => {
                             }}
                         />
                         <Stack.Screen
-                            name={Constant.nameScreen.SuppliesList}
-                            component={SuppliesList}
+                            name={Constant.nameScreen.Statistical}
+                            component={StatisticalEquipment}
                             options={{
-                                title: 'Vật tư'
+                                title: 'Thống kê'
                             }}
                         />
                         <Stack.Screen

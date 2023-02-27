@@ -115,7 +115,7 @@ const getAllEquipmentsByDepartmentAPI = async (domain, id) => {
 const requestErrorAPI = async (domain, id, reason) => {
   try {
       const url = `${domain}/api/v1/equipment/${id}`
-      const date_failure = format(new Date(), 'hh:mm dd-MM-yyyy')
+      const date_failure = format(new Date(), 'yyyy-MM-dd hh:mm:ss')
       const info = { date_failure, reason }
       const headers = {
           ...Constant.headers,
@@ -136,7 +136,7 @@ const requestErrorAPI = async (domain, id, reason) => {
 const requestInventoryAPI = async (domain, id, note) => {
   try {
       const url = `${domain}/api/v1/createInventory/${id}`
-      const date = format(new Date(), 'yyyy-MM-dd')
+      const date = format(new Date(), 'yyyy-MM-dd hh:mm:ss')
       const info = { date, note }
       const headers = {
           ...Constant.headers,
@@ -182,6 +182,20 @@ const getAllNotificationAPI = async (domain) => {
   }
 }
 
+const statisticalEquipment = async (domain, filter, value) => {
+    try {
+        const url = `${domain}/api/v1/statistical-by-info?${filter}=${value}`
+        const headers = {
+            ...Constant.headers,
+            Authorization: `Bearer ${AppManager.shared.currentUser?.access_token}`
+        }
+        let response = await axios.get(url, { headers })
+        return Promise.resolve(response.data)
+    } catch (error) {
+        return Promise.reject(error)
+    }
+}
+
 export {
   loginAPI,
   getAllUsersAPI,
@@ -194,5 +208,6 @@ export {
   getAllNotificationAPI,
   requestErrorAPI,
   requestInventoryAPI,
+  statisticalEquipment,
 
 }

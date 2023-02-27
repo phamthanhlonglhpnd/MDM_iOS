@@ -10,7 +10,6 @@ import Loading from '../customs/Loading'
 import StorageManager from '../../controller/StorageManager'
 import { getAllEquipmentsAPI } from '../../controller/APIService'
 
-
 const EquipmentList = () => {
 
     const route = useRoute()

@@ -60,7 +60,8 @@ export default {
         Scan: 'Scan',
         Equipment_Department: 'Danh sách thiết bị',
         EquipmentInventoryResult: 'Danh sách tìm kiếm thiết bị cần kiểm kê',
-        EquipmentErrorResult: 'Danh sách tìm kiếm thiết bị cần báo hỏng'
+        EquipmentErrorResult: 'Danh sách tìm kiếm thiết bị cần báo hỏng',
+        Statistical: 'Statistical'
     },
     dateFormat: {
         default: 'dd-MM-yyyy',
@@ -93,6 +94,18 @@ export default {
             screen: 'ErrorRequest'
         },
         {
+            title: 'Thống kê',
+            icon: require('../assets/images/ic_statistics.png'),
+            color: '#D3C3C3',
+            screen: 'Statistical'
+        },
+        {
+            title: 'Kiểm kê',
+            icon: require('../assets/images/inventory.png'),
+            color: '#A86362',
+            screen: 'EquipmentInventory'
+        },
+        {
             title: 'Khoa phòng',
             icon: require('../assets/images/ic_organization.png'),
             color: 'orange',
@@ -104,18 +117,6 @@ export default {
             color: '#81A9B2',
             screen: 'StaffList'
         },
-        {
-            title: 'Vật tư',
-            icon: require('../assets/images/ic_supplies.png'),
-            color: '#D3C3C3',
-            screen: 'SuppliesList'
-        },
-        {
-            title: 'Kiểm kê',
-            icon: require('../assets/images/ic_statistics.png'),
-            color: '#A86362',
-            screen: 'EquipmentInventory'
-        }
     ],
     equipmentStatus: [
         {
@@ -155,7 +156,7 @@ export default {
         },
         {
             id: 2,
-            value: "http://bvkienanhp.qltbyt.com",
+            value: "https://bvkienanhp.qltbyt.com",
             img: ""
         },
         {
